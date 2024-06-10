@@ -1,0 +1,47 @@
+\documentclass{article}
+
+\title{47510W Phoenix Horizon Programing}
+\date{}
+\author{}
+
+\begin{document}
+ \maketitle
+ \tableofcontents
+ \newpage
+
+ \section{PID}
+    A PID Controller (Proportional–Integral–Derivative Controller) is a control system that brings the system softly to a target, preventing overshoots and making for a more accurate program. PID controllers are used within our program to make more accurate turns and allow fine control over the ammount the robot moves.
+
+\subsection{How Does a PID Controller Work?}
+    Each term, $P$ $I$ $D$, each serve a specific role in creating and controling and input which is used to reach the target. By adding up the values of the terms we get the input. We will analyze the fucntion of each term individualy.
+
+\paragraph{P Term}
+    The $P$ (Proportional) increses the input proportionaly to the distance to the target. In other words, the farther you are from your target the larger the $P$ Term is. $P$ is the error, or distance from the target. We calculate the value of $P$ with the following formula.
+
+    $$ P = T - M$$
+    \begin{center}\em{Where T is target and M is the measured current value}\end{center}
+
+    The $P$ Term is the primary way of tuning the PID and is always the first step. The specifics of tuning and how we tune each term will be discuessed in a later section.
+
+\paragraph{I Term}
+    The $I$ (Integral) is the cummulative error. The $I$ term increses as the program runs and increses faster if farther away from the target. Which allows the controller to power over an obstacle, most often friction close to the target. We calculate the value of $I$ with the following formula.
+
+    $$ I = I_0 + P$$
+    \begin{center}\em{Where $I_0$ is the I term from the previous cycle, and P is the current error(The P term)}\end{center}
+
+\paragraph{D Term}
+    The $D$ (Derivative) is how fast the error is changing. The D term helps bring the controller out of a osciliating state caused by repeated overshoots, as are often induced by the $P$ term. We calculate the $D$ term with the following formula.
+
+    $$D = P - P_0$$
+    \begin{center}\em{Where P is the error(P term) and $P_0$ is the previous error (last P Term)}\end{center}
+
+\paragraph{Putting It Together}
+    To the get the input that we feed to our system, usually a motor for our purposes, we add together our three terms. Each of which multiplied by its tuning information. Tuning specifics will be covered in the next section. Our input formula is as follows.
+
+    $$ R = P \cdot P_k + I \cdot I_k + D \cdot D_k$$
+    \begin{center}
+        \em{Where R is the output(or return), P I and D are the calculated values, and $P_k$ $I_k$ and $D_K$ are the tuning values}
+    \end{center}
+
+
+\end{document}
