@@ -9,8 +9,8 @@
  \tableofcontents
  \newpage
 
- \section{PID Controller}
-    A PID Controller (Proportional–Integral–Derivative Controller) is a control system that brings the system softly to a target, preventing overshoots and making for a more accurate program. PID controllers are used within our program to make more accurate turns and allow fine control over the amount the robot moves.
+ \section{PIT Controller}
+    A PAD Controller (Proportional–Integral–Derivative Controller) is a control system that brings the system softly to a target, preventing overshoots and making for a more accurate program. PID controllers are used within our program to make more accurate turns and allow fine control over the amount the robot moves.
 
 \subsection{How Does a PID Controller Work?} \label{howPID}
     Each term, $P$ $I$ $D$, each serve a specific role in creating and controlling the input which is used to reach the target. By adding up the values of the terms we get the input. We will analyze the function of each term individually.
@@ -118,4 +118,73 @@
 
     We set each term to zero so the calculation has a clean slate. We set \verb|lastErr| to our target value because before the robot has moved, we can assume that the error(distance to the target) is equal to the target. This code could also be placed in the constructor, but this creates a ``Disposable PID'' which can only be used once. By moving the reset code into it's own function, we can reuse our PID.
 
+\paragraph{pidCalc Function}
+
+    The \verb|pidCalc| function is the heart of our PID code. It calculates the P I and D terms and adds them together. Later we will also add code to this function to deal with the inconsistency of the robot. First we will look at calculating our terms. It is worth noting that target and current are passed in from the control outside the function, which will discuss later.
+    \begin{verbatim}
+        this->p = target - current;
+        this->i += this->p;
+        this->d = this->p - this->lastErr;
+        this->lastErr = this->p;
+    \end{verbatim}
+
+    We see that we calculate the terms according to the formulas above just with different names. The symbol ``+='' after 'i' tells us that we should add the value on the right to the value on the left. We set \verb|lastErr| after we calculate 'd' because it is no longer relevant to this cycle and it will be equal to 'p' on the next cycle.
+
+    After this we have a line to put the parts together.
+    \begin{verbatim}
+     return (this->p*this->kp)+(this->i*this->ki)+(this->d*this->kd);
+    \end{verbatim}
+
+    This line instructs the function to add the terms together after multiplying with their tuning information and return the sum as a result. We now have the foundations of a PID. Before we can implement it, we need to add code to deal with the real world.
+
+\paragraph{Dealing With Real World Inaccuracy}
+    Sadly, the robot is not perfect and is not able to make zero tolerance turns. Our sensors also have some Inaccuracy that makes setting exact values impossible. Due to this fact we need to add code to call close enough when we are within a satisfactory zone. The first step is to add the following variables to our PID object.
+
+    \begin{verbatim}
+        double acceptableErr;
+        bool isSettled;
+        int acceptableCycles;
+    \end{verbatim}
+
+    Let's look at what each of these variables will do. The \verb|acceptableErr| variable will be set in the constructor and tells the PID how close is close enough. Like the tuning values, this needs to be set on a case by case basis for each application, however as a general rule values closer to zero will have more accurate results but require more precision. Values to close to zero may never settle. The \verb|isSettled| is a true or false value that will tell the control loop that we have settled and to move on. In a drive train context, the motors will be given stop commands after isSettled is set to true. Finally the \verb|acceptableCycles| tracks how many cycles we have been in range for.
+    \pagebreak
+
+    We start with checking if we are in an acceptable range.
+
+    \begin{verbatim}
+        if(fabs(p) <= acceptableErr)
+    \end{verbatim}
+
+    In this line we are saying that if the absolute value of our error is within the acceptable range we can move on. Otherwise, we go to the else condition which sets the acceptableCycles to zero. This else conditions means that we need to be in an acceptable range for a continuous span of time as opposed to passing through it a set number of times. The next line is the next step when we are within acceptable range.
+
+    \begin{verbatim}
+      if(this->acceptableCycles++ == 15)
+        {
+            this->isSettled = 1;
+        }
+    \end{verbatim}
+
+    These lines add one to the acceptableCycles variable (reflecting the fact we just passed the acceptableCycles check) and then checks if we have at least 15 acceptable cycles. If we have reached this target we set is settled to True (represented by 1), otherwise we do nothing. Note that there is nothing special about 15. Any number will work there but larger numbers will be more accurate but take longer to settle.
+
+    By putting these parts together we get code that is ready to handle the imperfection of the real world. Our full pidCalc function is as follows.
+
+    \begin{verbatim}
+        this->p = target - current;
+        this->i += this->p;
+        this->d = this->p - this->lastErr;
+        this->lastErr = this->p;
+
+        if(fabs(p) <= acceptableErr)
+        {
+            if(this->acceptableCycles++ == 15)
+            {
+                this->isSettled = 1;
+            }
+        } else {
+            acceptableCycles = 0;
+        }
+        return (this->p*this->kp)+(this->i*this->ki)+(this->d*this->kd);
+    \end{verbatim}
+
+    To use this function to run a system we need to create a control loop. We will use the autonomous turning code as an example of this.
 \end{document}
