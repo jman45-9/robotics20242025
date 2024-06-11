@@ -1,7 +1,7 @@
 \documentclass{article}
 
-\title{47510W Phoenix Horizon Programing}
-\date{}
+\title{47510W Phoenix Horizon Programming}
+\date{2024-2025}
 \author{}
 
 \begin{document}
@@ -9,28 +9,28 @@
  \tableofcontents
  \newpage
 
- \section{PID}
-    A PID Controller (Proportional–Integral–Derivative Controller) is a control system that brings the system softly to a target, preventing overshoots and making for a more accurate program. PID controllers are used within our program to make more accurate turns and allow fine control over the ammount the robot moves.
+ \section{PID Controller}
+    A PID Controller (Proportional–Integral–Derivative Controller) is a control system that brings the system softly to a target, preventing overshoots and making for a more accurate program. PID controllers are used within our program to make more accurate turns and allow fine control over the amount the robot moves.
 
 \subsection{How Does a PID Controller Work?}
-    Each term, $P$ $I$ $D$, each serve a specific role in creating and controling and input which is used to reach the target. By adding up the values of the terms we get the input. We will analyze the fucntion of each term individualy.
+    Each term, $P$ $I$ $D$, each serve a specific role in creating and controlling the input which is used to reach the target. By adding up the values of the terms we get the input. We will analyze the function of each term individually.
 
 \paragraph{P Term}
-    The $P$ (Proportional) increses the input proportionaly to the distance to the target. In other words, the farther you are from your target the larger the $P$ Term is. $P$ is the error, or distance from the target. We calculate the value of $P$ with the following formula.
+    The $P$ (Proportional) increases the input proportionally to the distance to the target. In other words, the farther you are from your target the larger the $P$ Term is. $P$ is the error, or distance from the target. We calculate the value of $P$ with the following formula.
 
     $$ P = T - M$$
     \begin{center}\em{Where T is target and M is the measured current value}\end{center}
 
-    The $P$ Term is the primary way of tuning the PID and is always the first step. The specifics of tuning and how we tune each term will be discuessed in a later section.
+    The $P$ Term is the primary way of tuning the PID and is always the first step. The specifics of tuning and how we tune each term will be discussed in a later section.
 
 \paragraph{I Term}
-    The $I$ (Integral) is the cummulative error. The $I$ term increses as the program runs and increses faster if farther away from the target. Which allows the controller to power over an obstacle, most often friction close to the target. We calculate the value of $I$ with the following formula.
+    The $I$ (Integral) is the cumulative error. The $I$ term increases as the program runs and increases faster if farther away from the target. Which allows the controller to power over an obstacle, most often friction close to the target. We calculate the value of $I$ with the following formula.
 
     $$ I = I_0 + P$$
     \begin{center}\em{Where $I_0$ is the I term from the previous cycle, and P is the current error(The P term)}\end{center}
 
 \paragraph{D Term}
-    The $D$ (Derivative) is how fast the error is changing. The D term helps bring the controller out of a osciliating state caused by repeated overshoots, as are often induced by the $P$ term. We calculate the $D$ term with the following formula.
+    The $D$ (Derivative) is how fast the error is changing. The D term helps bring the controller out of a oscillating state caused by repeated overshoots, as are often induced by the $P$ term. We calculate the $D$ term with the following formula.
 
     $$D = P - P_0$$
     \begin{center}\em{Where P is the error(P term) and $P_0$ is the previous error (last P Term)}\end{center}
@@ -38,10 +38,21 @@
 \paragraph{Putting It Together}
     To the get the input that we feed to our system, usually a motor for our purposes, we add together our three terms. Each of which multiplied by its tuning information. Tuning specifics will be covered in the next section. Our input formula is as follows.
 
-    $$ R = P \cdot P_k + I \cdot I_k + D \cdot D_k$$
+    $$ R = P \cdot K_P + I \cdot K_I + D \cdot K_D$$
     \begin{center}
-        \em{Where R is the output(or return), P I and D are the calculated values, and $P_k$ $I_k$ and $D_K$ are the tuning values}
+        \em{Where R is the output(or return), P I and D are the calculated values, and $K_P$ $K_I$ and $K_D$ are the tuning values}
     \end{center}
 
+\subsection{Tuning A PID}
+    For a PID to properly reach the target it must be tuned. Inadequate tuning can lead to failure to reach the target or aggressive oscillations. We tune a PID by changing tuning parameters, these parameters are called $K_P$ $K_I$ and $K_D$. The first step is to set all tuning parameters to 0. By setting a paramerter to zero we can cut out thier influence for the time being. As in the previous section we will look at the tuning of each term individually.
+
+\paragraph{Tuning the $K_P$ Term}
+    The first step to tuning a PID is to set the $K_P$ term. The first step to setting $K_P$ is to increses it until we get an overshoot and a settle either on the target or settles into an undershoot. If it settles on the target we are done with tuning and PID should be ready to use. If we settle into an undershoot we must move onto setting the $K_I$ term. If we overshoot or enter oscillations without settling we need to decrese the $K_P$ term.
+
+\paragraph{Tuning the $K_I$ Term}
+    The purpose of changing the $K_I$ term is to fix steady state error after the control settles. As a result of the behavior of the $I$ term to increses over time, it can add input to make the final push to the target even after the distance is not great enough for the $P$ term to have an effect. The $K_I$ does not need to be changed in all application. The $K_I$ term should be incresed with caution because incresing it even by small ammounts can introduce instability and overshoot.
+
+\paragraph{Tuning the $K_D$ Term}
+    The purpose of the $K_D$ term is to control oscillations in the system. We should change $K_D$ when the system has small but unacceptable oscillations. If the oscillations are large, it points to error in the $K_P$ term. Changing $K_D$ is often unnecessary in the context of robotics. We should change $K_D$ to refine out small errors when working with more percise systems such as driving and turning. However systems which do not need to be super percise, like the speed of a flywheel, we can forgo tuning this term. Tuning of $K_D$ is a final refinement step to add extra stability or to counteract instability added by tuning $K_I$.
 
 \end{document}
