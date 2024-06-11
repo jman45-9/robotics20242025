@@ -1,2 +1,3 @@
 2024 Juni 9 Added information on how PID controller works
 2024 Juni 10 Added information on how to tune PID
+2024 Juni 10 Added information regarding constructor and reset functions

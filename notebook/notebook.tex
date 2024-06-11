@@ -12,7 +12,7 @@
  \section{PID Controller}
     A PID Controller (Proportional–Integral–Derivative Controller) is a control system that brings the system softly to a target, preventing overshoots and making for a more accurate program. PID controllers are used within our program to make more accurate turns and allow fine control over the amount the robot moves.
 
-\subsection{How Does a PID Controller Work?}
+\subsection{How Does a PID Controller Work?} \label{howPID}
     Each term, $P$ $I$ $D$, each serve a specific role in creating and controlling the input which is used to reach the target. By adding up the values of the terms we get the input. We will analyze the function of each term individually.
 
 \paragraph{P Term}
@@ -54,5 +54,68 @@
 
 \paragraph{Tuning the $K_D$ Term}
     The purpose of the $K_D$ term is to control oscillations in the system. We should change $K_D$ when the system has small but unacceptable oscillations. If the oscillations are large, it points to error in the $K_P$ term. Changing $K_D$ is often unnecessary in the context of robotics. We should change $K_D$ to refine out small errors when working with more percise systems such as driving and turning. However systems which do not need to be super percise, like the speed of a flywheel, we can forgo tuning this term. Tuning of $K_D$ is a final refinement step to add extra stability or to counteract instability added by tuning $K_I$.
+
+\newpage
+\subsection{Coding a PID for Robotics}
+    When using a PID for an actual application we can use the information described above to create a foundation, but we also need to add some extra parts to help with the imperfections of the real world. The change that must be made is to tell the program when it is ``Close Enough'' and it can stop. There is also the problem of feeding the input to the application. First we will look at the parts which are simmilar to the PID theory above.
+
+\paragraph{Initalizing Variables and Setting Up}
+    The first step to creating any new code system is to create an object (See the ``Overview of Object Oriented Programming'' to get information on this concept), and create variables we need. For now we will only create variables related to the theory and not the modifactions required for a code implementation. This is all done in the header file (Also see the ``Overview of Programing Concepts'' for more information). So far, our code looks like the following.
+
+    \begin{verbatim}
+        in pid.hpp:
+
+        class PID_OBJ
+        {
+            public:
+                double p;
+                double i;
+                double d;
+                double kp;
+                double ki;
+                double kd;
+
+                double lastErr;
+
+                PID_OBJ(double kp, double ki, double kd);
+
+                double pidCalc(double target, double current);
+                void reset(double target);
+        };
+    \end{verbatim}
+
+    Let's break down that chunk of code a piece at a time. The first thing we see is the class declaration and the public keyword. These are explained in depth in the ``Overview of Object Oriented Programing''. For our purposes of explaining PID, they are unimportant. Then we see a list of variables all declared as floating point(decimal) values with double percision(hence the name 'double'). After that we declare 3 functions which we will look at in a moment. First, however, let us analyze the variables.
+
+   \textbf{Variables.} We can see that we have many famillar variables which are reminicent of the equations in the previous section. We also have a new variable \verb|double lastErr| which will keep track of what the error was during the last cycle of the control loop. If you recall from the section of the $D$ term, having access to the last error is important to the calculation of the term.
+
+    \textbf{Functions.} Now we will look at the functions we have declared. The first fucntion \verb|PID_OBJ| is a contructor and is called on the creation of a new PID. It takes three arguments, \verb|kp ki kd|, which should be fammilar from both the section on tuning and our variables above. These arguments are how we will tune our system. The \verb|pidCalc| function does the operations described in section \ref{howPID}. Finnaly the reset function allows us to reset the terms without creating a new PID. This is important between tasks to prevent interference. First we will look at the constructor and reset functions, then we will look at the \verb|pidCalc| function.
+
+\paragraph{Constructor and Reset Functions}
+    The constructor and reset functions serve to initilize the PID before an external control loop. We will first look at the constructor.
+
+    \textbf{Constructor.} The constructor serves to build a new PID object and set tuning information. The code within the constructor is as follows.
+
+    \begin{verbatim}
+    in pid.cpp:
+
+        this->kp = kp;
+        this->ki = ki;
+        this->kd = kd;
+    \end{verbatim}
+
+    We are simply setting the passed values we saw in the header to internal values in the object which we can access later to do calculations with. This allows us to tune once. However, to use the PID multiple times we need to look at the rest function.
+
+    \textbf{Reset.} The reset function sets the values of the PID to be ready for operation. It is absolutly necessary that this function is called before attempting to use the PID. We write the reset function like so.
+
+    \begin{verbatim}
+    in pid.cpp:
+
+        this->p = 0;
+        this->i = 0;
+        this->d = 0;
+        this->lastErr = target;
+    \end{verbatim}
+
+    We set each term to zero so the calculation has a clean slate. We set \verb|lastErr| to our target value because before the robot has moved, we can assume that the error(distance to the target) is equal to the target. This code could also be placed in the constructor, but this creates a ``Disposable PID'' which can only be used once. By moving the reset code into it's own function, we can reuse our PID.
 
 \end{document}
