@@ -5,14 +5,25 @@
 using namespace pros;
 using namespace pros::literals;
 
+#define MTR_FAST E_MOTOR_GEAR_BLUE
+#define DRI_REV 0
+
 namespace Y2425
 {
 class Drivetrain
 {
-        private:
-                int *mtrports;
-                Motor *mtrs;
-                
+        public:
+                Imu inertial;                
+                Motor LBMtr;
+                Motor LCMtr;
+                Motor LFMtr;
+                Motor RBMtr;
+                Motor RCMtr;
+                Motor RFMtr;
+
+                Drivetrain();
+                void leftDrive(int mV);
+                void rightDrive(int mV);
 };
 }
 
