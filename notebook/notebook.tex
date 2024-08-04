@@ -57,7 +57,7 @@
     The purpose of changing the $K_I$ term is to fix steady state error after the control settles. As a result of the behavior of the $I$ term to increases over time, it can add input to make the final push to the target even after the distance is not great enough for the $P$ term to have an effect. The $K_I$ does not need to be changed in all application. The $K_I$ term should be increased with caution because increasing it even by small amounts can introduce instability and overshoot.
 
 \paragraph{Tuning the $K_D$ Term}
-    The purpose of the $K_D$ term is to control oscillations in the system. We should change $K_D$ when the system has small but unacceptable oscillations. If the oscillations are large, it points to error in the $K_P$ term. Changing $K_D$ is often unnecessary in the context of robotics. We should change $K_D$ to refine out small errors when working with more precise systems such as driving and turning. However systems which do not need to be super precise, like the speed of a flywheel, we can forgo tuning this term. Tuning of $K_D$ is a final refinement step to add extra stability or to counteract instability added by tuning $K_I$.
+    The purpose of the $K_D$ term is to control oscillations in the system. We should change $K_D$ when the system has small but unacceptable oscillations. If the oscillations are large, it points to error in the $K_P$ term. Changing $K_D$ is often unnecessary in the context of robotics. We should change $K_D$ to refine out small errors when working with more precise systems such as driving and tuning. However systems which do not need to be super precise, like the speed of a flywheel, we can forgo tuning this term. Tuning of $K_D$ is a final refinement step to add extra stability or to counteract instability added by tuning $K_I$.
 
 \newpage
 \section{PID in Code}
@@ -193,7 +193,7 @@
             +(this->i*this->ki)+(this->d*this->kd);
     \end{verbatim}
 
-    To use this function to run a system we need to create a control loop. We will use the autonomous turning code as an example of this.
+    To use this function to run a system we need to create a control loop. We will use the autonomous tuning code as an example of this.
 
 \subsection{PID Control Loop Example}
 \paragraph{What does the control loop do?}
@@ -252,6 +252,69 @@
     By using the data from the wheels and sensors we are able to
     With odomotry we are able to tell the robot to go to a point as opposed to manually setting turns and movement. This allows for more percise programing that can remove errors in real applications.
 
-\subsection{Designing Odometry}
+\subsection{Odomotry Sensors}
+    Working with odomotry requires two kinds sensors. One to track the robot heading, the inertial sensor, and one to track the positon of the odom wheels, the rotation sensor. We could also use a motor encoder, a comparison table of the two follows this.
+    \begin{center}
+        \begin{tabular}{c|c}
+            Rotation Sensor & Motor Encoder \\
+            \hline
+            One Smart Motor Point & Two 3 wire ports \\
+            More Percise & Less Percise \\
+            Less Structure & More structure \\
+            Center Screw Pivot & Must have makeshift pivot \\
+        \end{tabular}
+
+        We decided to use the rotation sensor because we benifit from the increased percision and better pivot.
+    \end{center}
+
+\subsection{Odom Wheels}
+We have decided to use 2.75in wheels for odomotry. We chose this size because it is the smallest size we have. It is benifical to use the smallest wheels avalible because the take of the least space. <Add spacing information>
+
+\pagebreak
+\subsection{Determining Field Position}
+The first step in dertermining the change in the field postion is determining how much the robot heading changed. We use a continuous heading approach meaning that the heading does not reset after completing a rotation. Turing clockwise is repeated by a negitive number and turing counterclockwise is represented by a positive number. We find the change in heading with the following formula.
+$$
+    \Delta \theta = \theta_1-\theta_0
+$$
+\textit{Where $theta_1$ is the current heading, $\theta_0$ was the last heading, and $\Delta \theta$ is the change in heading}
+
+Next we must get the change on both authon wheels by using our rotation sensors. We can ues the following formulas.
+
+\textit{Let $degToIn(\theta)$ is a function which converts a value in degrees to a value in inches using the wheel diameter. (Wheel diameter is asuumed in these formulas so is not listed.)}
+
+See \ref{app_degToIn} for more information about degToIn including a formal derivation.
+$$
+    \Delta x = degToIn(R_{x_1} - R_{x_0})
+$$
+\textit{Where $\Delta x$ is the change in the $x$ direction. $R_{x_1}$ is the curent positon and $R_{x_0}$ is the last position of the wheel}
+$$
+    \Delta y = degToIn(R_{y_1} - R_{y_0})
+$$
+\textit{Where $\Delta y$ is the change in the $y$ direction. $R_{y_1}$ is the curent positon and $R_{y_0}$ is the last postion of the wheel}
+
+\newpage
+\appendix
+\section{Mathematical Derivations for Odomotry Functions}
+\subsection{Deriving the degToIn Function} \label{app_degToIn}
+    The degToIn function uses basic circle geometry to convert the degress a wheel rotates into the distance the wheel moves in inches using the wheel diameter. This function hinges on the principle that a wheel moves a distance equivlent to it's circumfrence for each full rotation. We define circumfrence with the equation.
+    $$ C = d\pi $$
+    \center\textit{Where $C$ is the circumfrence and $d$ is the diameter of the circle.}
+
+    \raggedright
+    This formula gives us the distance that the wheel moves if the wheel moves one rotation at a time. Sadly, though, in real life the wheel moves in fractional increments. We can represent this fractional rotation by multiplying the circumfrence by the same fraction. We find this fraction by dividing the mesured valued by the ammount of one rotation, in this case 360 degrees. We can use this fraction of a rotation to get the distance by multiplying it by the wheel circumfrence. So we use the following formula.
+    $$ D = \frac{\theta^\circ}{360} \cdot C $$
+    \center\textit{Where $D$ is the distance the wheel moved, $\theta^\circ$ is the degrees the wheel rotates, and $C$ is the circumfrence of the wheel.}
+
+    \raggedright
+    Finnaly we add this fumction into our code. We use M PI to put $\pi$ into the code. The function goes as follows.
+
+    \begin{verbatim}
+     double degToIn(double deg, double wheelDiam)
+     {
+         return (deg * (M_PI / 360.0)) * (wheelDiam);
+     }
+    \end{verbatim}
+
+    \textit{Q.E.F}
 
 \end{document}
