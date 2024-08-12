@@ -1,6 +1,9 @@
 \documentclass[12pt]{article}
 
+\usepackage{tikz}
 \usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
 
 \title{47510W Phoenix Horizon Programming}
 \date{2024-2025}
@@ -13,7 +16,18 @@
  \tableofcontents
  \newpage
 
- \section{PID Controller Basics}
+\section*{Programming Environment}
+\addcontentsline{toc}{section}{Programming Environment}
+This section details the way in which we are managing our code for this robotics year.
+\section{Version Control: Git}
+For our version control system this year we have chosen the popular Git version control system. Git keeps track of each version of our code and also allows us to revert back if needed. We can also create multiple branches so we can work on a new part of the code without impacting the functioning code. Also, through the use of GitHub we can easily create a copy of our code and version history which lives in the web. Git also facilitates collaboration between team members working on the drive code. It is for these reasons that we have chosen Git for our version control for the 2024-2025 VRC competition.
+\section{Robot API: Purdue PROS}
+We have decided to use the Purdue PROS API to interface with our robot. We have chosen this API for it's superior performance and documentation over the standard VEX API. By using PROS we can also use our preferred code editors.
+\section{Programming Libraries}
+\section*{Algorithms for Programming}
+\addcontentsline{toc}{section}{Algorithms for Programming}
+This section of the notebook will detail the Algorithms that we are using for robot control.
+\section{PID Controller Basics}
     A PID Controller (Proportional–Integral–Derivative Controller) is a control system that brings the system softly to a target, preventing overshoots and making for a more accurate program. PID controllers are used within our program to make more accurate turns and allow fine control over the amount the robot moves.
 
 \subsection{How Does a PID Controller Work?} \label{howPID}
@@ -229,7 +243,7 @@
             this->driveLeft(-calcVal);
     \end{verbatim}
 
-    Note that the value we feed to the left motors is the opposite of that fed to the right motors. This is done so the robot will actually turn as opposed to going straight. We pass the value from the inertial sensor as the current mesured value to the pidCalc function of the turPID (turn PID).
+    Note that the value we feed to the left motors is the opposite of that fed to the right motors. This is done so the robot will actually turn as opposed to going straight. We pass the value from the inertial sensor as the current measured value to the pidCalc function of the turPID (turn PID).
 
     Next we check if the PID has settled with a quick if statement, which is the following.
     \begin{verbatim}
@@ -240,73 +254,91 @@
         }
     \end{verbatim}
 
-    If the PID has settled the program tells the robot to brake and stop turning. After braking the loop ends and the robot has turned to the correct positon. This concludes the section on the PID and we will now move onto odometry.
+    If the PID has settled the program tells the robot to brake and stop turning. After braking the loop ends and the robot has turned to the correct position. This concludes the section on the PID and we will now move onto odometry.
 
 
 \pagebreak
 \section{Basics of Odometry}
 \subsection{What is Odometry}
-    Odomotry allows the robot to keep track of where it is on the field. In this imperfection, the robot keeps track of whre it is relative to it's starting positon. Odometry works by tracking the rotation of specific wheels and the heading of the robot.
+    Odometry allows the robot to keep track of where it is on the field. In this imperfection, the robot keeps track of where it is relative to it's starting position. Odometry works by tracking the rotation of specific wheels and the heading of the robot.
     %should add odom wheel image here later :)
 
     By using the data from the wheels and sensors we are able to
-    With odomotry we are able to tell the robot to go to a point as opposed to manually setting turns and movement. This allows for more percise programing that can remove errors in real applications.
+    With odometry we are able to tell the robot to go to a point as opposed to manually setting turns and movement. This allows for more precise programming that can remove errors in real applications.
 
-\subsection{Odomotry Sensors}
-    Working with odomotry requires two kinds sensors. One to track the robot heading, the inertial sensor, and one to track the positon of the odom wheels, the rotation sensor. We could also use a motor encoder, a comparison table of the two follows this.
+\subsection{Odometry Sensors}
+    Working with odometry requires two kinds sensors. One to track the robot heading, the inertial sensor, and one to track the position of the odom wheels, the rotation sensor. We could also use a motor encoder, a comparison table of the two follows this.
     \begin{center}
         \begin{tabular}{c|c}
             Rotation Sensor & Motor Encoder \\
             \hline
             One Smart Motor Point & Two 3 wire ports \\
-            More Percise & Less Percise \\
+            More Precise & Less Precise \\
             Less Structure & More structure \\
             Center Screw Pivot & Must have makeshift pivot \\
         \end{tabular}
 
-        We decided to use the rotation sensor because we benifit from the increased percision and better pivot.
+        We decided to use the rotation sensor because we benefit from the increased precision and better pivot.
     \end{center}
 
 \subsection{Odom Wheels}
-We have decided to use 2.75in wheels for odomotry. We chose this size because it is the smallest size we have. It is benifical to use the smallest wheels avalible because the take of the least space. <Add spacing information>
+We have decided to use 2.75in wheels for odometry. We chose this size because it is the smallest size we have. It is beneficial to use the smallest wheels available because the take of the least space. <Add spacing information>
 
 \pagebreak
 \subsection{Determining Field Position}
-The first step in dertermining the change in the field postion is determining how much the robot heading changed. We use a continuous heading approach meaning that the heading does not reset after completing a rotation. Turing clockwise is repeated by a negitive number and turing counterclockwise is represented by a positive number. We find the change in heading with the following formula.
+\subsubsection{Finding $\Delta x$, $\Delta y$, and $\Delta\theta$}
+The first step in determining the change in the field position is determining how much the robot heading changed. We use a continuous heading approach meaning that the heading does not reset after completing a rotation. Turing clockwise is repeated by a negative number and turning counterclockwise is represented by a positive number. We find the change in heading with the following formula.
 $$
     \Delta \theta = \theta_1-\theta_0
 $$
 \textit{Where $theta_1$ is the current heading, $\theta_0$ was the last heading, and $\Delta \theta$ is the change in heading}
 
-Next we must get the change on both authon wheels by using our rotation sensors. We can ues the following formulas.
+Next we must get the change on both odom wheels by using our rotation sensors. We can use the following formulas.
 
-\textit{Let $degToIn(\theta)$ is a function which converts a value in degrees to a value in inches using the wheel diameter. (Wheel diameter is asuumed in these formulas so is not listed.)}
+\textit{Let $degToIn(\theta)$ is a function which converts a value in degrees to a value in inches using the wheel diameter. (Wheel diameter is assumed in these formulas so is not listed.)}
 
 See \ref{app_degToIn} for more information about degToIn including a formal derivation.
 $$
     \Delta x = degToIn(R_{x_1} - R_{x_0})
 $$
-\textit{Where $\Delta x$ is the change in the $x$ direction. $R_{x_1}$ is the curent positon and $R_{x_0}$ is the last position of the wheel}
+\textit{Where $\Delta x$ is the change in the $x$ direction. $R_{x_1}$ is the current position and $R_{x_0}$ is the last position of the wheel}
 $$
     \Delta y = degToIn(R_{y_1} - R_{y_0})
 $$
-\textit{Where $\Delta y$ is the change in the $y$ direction. $R_{y_1}$ is the curent positon and $R_{y_0}$ is the last postion of the wheel}
+\textit{Where $\Delta y$ is the change in the $y$ direction. $R_{y_1}$ is the current position and $R_{y_0}$ is the last position of the wheel}
 
+\subsubsection{Combining $\Delta x$, $\Delta y$, and $\Delta\theta$ in the current plane}
+    For this section we define a variable robotOdomPos to store the odom position relative to the robot. This variable stores a (X,Y) coordinate.
+\paragraph{When $\Delta\theta = 0$}
+    we don't have to do any trigonometry at this step. We can simply store the x, y change into the variable. We can shorthand this with the following equation.
+    $$ (\Delta x, \Delta y) = (X,Y)_{robotOdomPos} $$
+\paragraph{When $\Delta\theta \neq 0$}\label{deltaneqtheta}
+Our job becomes much more difficult if the robot heading changes during the movement. Due to the mathematical complexity of this section most of it is shown in Appendix \ref{app_trighell}.
+\subsubsection{Rotating Into The Field's Plane}
+
+\section{The pointToPoint function}
+% BEGIN APPENDIX
+%
+%
+% BEGIN APPENDIX
 \newpage
 \appendix
-\section{Mathematical Derivations for Odomotry Functions}
+\section*{Appendix}
+\addcontentsline{toc}{section}{Appendix}
+The appendix will have fine technical details relating to the mathematics behind algorithms or specific technical concepts.
+\section{Mathematical Derivations for Odometry Functions}
 \subsection{Deriving the degToIn Function} \label{app_degToIn}
-    The degToIn function uses basic circle geometry to convert the degress a wheel rotates into the distance the wheel moves in inches using the wheel diameter. This function hinges on the principle that a wheel moves a distance equivlent to it's circumfrence for each full rotation. We define circumfrence with the equation.
+    The degToIn function uses basic circle geometry to convert the degrees a wheel rotates into the distance the wheel moves in inches using the wheel diameter. This function hinges on the principle that a wheel moves a distance equivalent to it's circumference for each full rotation. We define circumference with the equation.
     $$ C = d\pi $$
-    \center\textit{Where $C$ is the circumfrence and $d$ is the diameter of the circle.}
+    \center\textit{Where $C$ is the circumference and $d$ is the diameter of the circle.}
 
     \raggedright
-    This formula gives us the distance that the wheel moves if the wheel moves one rotation at a time. Sadly, though, in real life the wheel moves in fractional increments. We can represent this fractional rotation by multiplying the circumfrence by the same fraction. We find this fraction by dividing the mesured valued by the ammount of one rotation, in this case 360 degrees. We can use this fraction of a rotation to get the distance by multiplying it by the wheel circumfrence. So we use the following formula.
+    This formula gives us the distance that the wheel moves if the wheel moves one rotation at a time. Sadly, though, in real life the wheel moves in fractional increments. We can represent this fractional rotation by multiplying the circumference by the same fraction. We find this fraction by dividing the measured valued by the amount of one rotation, in this case 360 degrees. We can use this fraction of a rotation to get the distance by multiplying it by the wheel circumference. So we use the following formula.
     $$ D = \frac{\theta^\circ}{360} \cdot C $$
-    \center\textit{Where $D$ is the distance the wheel moved, $\theta^\circ$ is the degrees the wheel rotates, and $C$ is the circumfrence of the wheel.}
+    \center\textit{Where $D$ is the distance the wheel moved, $\theta^\circ$ is the degrees the wheel rotates, and $C$ is the circumference of the wheel.}
 
     \raggedright
-    Finnaly we add this fumction into our code. We use M PI to put $\pi$ into the code. The function goes as follows.
+    Finally we add this function into our code. We use M PI to put $\pi$ into the code. The function goes as follows.
 
     \begin{verbatim}
      double degToIn(double deg, double wheelDiam)
@@ -317,4 +349,99 @@ $$
 
     \textit{Q.E.F}
 
+    \pagebreak
+\subsection{Deriving Formulas to get $\Delta x$ and $\Delta y$ in the current plane when $\Delta\theta \neq 0$} \label{app_trighell}
+
+Finding the $\Delta x$ and $\Delta y$ is done from the following diagrams.
+
+\begin{figure}[h]
+\centering
+\caption{\textit{Given $C$, $X$, and $\theta$ find $y_{norm}$, $x_{norm}$ and $drift$ counter parts.}}
+\begin{minipage}{0.5\textwidth}
+\centering
+\label{norm_fig}
+\begin{tikzpicture}[scale=0.75]
+%main diagram
+\draw (0,0) -- (8.5,0);
+\draw(0,0) -- (7.5,3.75);
+\draw (8,0) arc (0:26.5:8);
+\node at (1,0.2){$\theta$};
+\node at (8,2){$C$};
+%r_c marks
+\draw [shift={(0,-0.5)}](0,-0.25) -- (8,-0.25);
+\draw [shift={(0,-0.5)}](0,-0.375) -- (0, -0.125);
+\draw [shift={(0,-0.5)}](8,-0.375) -- (8, -0.125);
+\node [shift={(0,-0.5)}] at (4,-0.5){$r_C$};
+
+\draw [shift={(-0.2,0.4)}, rotate=26.5] (0,-0.25) -- (8,-0.25);
+\draw [shift={(-0.2,0.4)}, rotate=26.5](0,-0.375) -- (0, -0.125);
+\draw [shift={(-0.2,0.4)}, rotate=26.5](8,-0.375) -- (8, -0.125);
+\node [rotate=30] at (3.5,2.2){$r_C$};
+
+%xy marks
+
+\draw[red,->, thick] (7.13,0) -- (7.13,3.5);
+\node[red] at (6.5, 2){$y_{norm}$};
+\draw[blue,->,thick] (8,0) -- (7.13,0);
+\node[blue] at (7.5, -0.25){$x_{norm}$};
+\end{tikzpicture}
+\caption{Diagram of normal movement(not accounting drift)}
+\end{minipage}%
+\begin{minipage}{0.5\textwidth}
+\centering
+\begin{tikzpicture}[rotate=-90,scale=0.75]
+%main diagram
+\draw (0,0) -- (8.5,0);
+\draw(0,0) -- (7.5,3.75);
+\draw (8,0) arc (0:26.5:8);
+\node at (0.8,0.17){$\theta$};
+\node at (8.1,2){$X$};
+%r_c marks
+\draw [shift={(0,-0.1)}](0,-0.25) -- (8,-0.25);
+\draw [shift={(0,-0.1)}](0,-0.375) -- (0, -0.125);
+\draw [shift={(0,-0.1)}](8,-0.375) -- (8, -0.125);
+\node [shift={(0,-0.1)}] at (4,-1.25){$r_X$};
+
+\draw [shift={(-0.2,0.4)}, rotate=26.5] (0,-0.25) -- (8,-0.25);
+\draw [shift={(-0.2,0.4)}, rotate=26.5](0,-0.375) -- (0, -0.125);
+\draw [shift={(-0.2,0.4)}, rotate=26.5](8,-0.375) -- (8, -0.125);
+\node [rotate=30] at (3.5,2.9){$r_X$};
+
+%xy marks
+\draw[blue,->, thick] (7.13,0) -- (7.13,3.5);
+\node[blue] at (6.8, 1.75){$x_{drift}$};
+\draw[red,->,thick] (8,0) -- (7.13,0);
+\node[red] at (7.6, 0.75){$y_{drift}$};
+\end{tikzpicture}
+\caption{Diagram of drifting movement}
+\end{minipage}
+\end{figure}
+
+For the purposes of this section we are assuming the tracking wheels are perfectly in the center of the robot. This is not possible in real robot design, but it simplifies the math. The corrections for real life applications are detailed in Section \ref{deltaneqtheta}. The $norm$ values do not account for drift and are determined from the y-wheel. $C$ is the value read from the sensor on the y-wheel. The $drift$ values are determined from the x-wheel. Likewise $X$ is the value read from the sensor on the x-wheel. We will first focus of the $norm$ values.
+\subsubsection{Finding $norm$ values}
+\paragraph{The first step is to find $r_C$.} This value is the radius the the arc $C$, or the arc which the robot travels along(assuming no drifting). We use the formula for arc length to find the value $r_C$.
+
+\centering
+Formula for Arc Length
+$$ s = \frac{\theta}{2\pi} (2\pi r) $$
+Which can then be reduced by canceling $2\pi$:
+$$ s = r\theta $$
+\textit{Where $A$ is the arc length, $\theta$ is the internal angle of the arc in radians, and $r$ is the radius of the arc.}
+
+We can substitute $C$ and $r_C$ and solve for $r_C$.
+$$ C = \theta r_C $$
+\textit{Dividing $theta$ from both sides.}
+$$ \frac{C}{\theta} = r_C $$
+
+\raggedright
+We also add the distance from the the y-center of the robot to the wheel in actual application. We assume that distance is zero for these purposes.
+
+\paragraph{By using $r_C$} we can find values for $x_{norm}$ and $y_{norm}$. We can do this by using sine and cosine. Recall that on the unit circle $\sin\theta$ is the y value of a certain point and $\cos\theta$ is the x value of a certain point. Recognizing that Figure \ref{norm_fig} invokes the unit circle of radius $r_C$, we see that $y_{norm} = r_C \sin\theta$. We also find that $x_{norm} = -(r_C - r_C \cos\theta)$. We must subtract from the radius because we wish to find the $x$ distance from the start position to the current position, not from the origin to the start position. We also must make this value negative because the robot x is moving in the negative direction (Direction of movement is shown by the arrows in \ref{norm_fig}). Finally we can factor out $r_C$ to simplify the formula for $x_norm$. So finally we come to the following two formulas for our $norm$ values.
+
+\centering
+$$y_{norm} = r_C \sin\theta$$
+$$x_{norm} = -r_C(1-\cos\theta)$$
+
+\raggedright
+\subsection{Deriving Formula to Rotate a Point}
 \end{document}
