@@ -313,8 +313,10 @@ $$
     we don't have to do any trigonometry at this step. We can simply store the x, y change into the variable. We can shorthand this with the following equation.
     $$ (\Delta x, \Delta y) = (X,Y)_{robotOdomPos} $$
 \paragraph{When $\Delta\theta \neq 0$}\label{deltaneqtheta}
-Our job becomes much more difficult if the robot heading changes during the movement. Due to the mathematical complexity of this section most of it is shown in Appendix \ref{app_trighell}.
+Our job becomes much more difficult if the robot heading changes during the movement. Due to the mathematical complexity of this section most of it is shown in Appendix \ref{app_trighell}. We can now discuss the diffrences between the appendix content and real life application. The most major change is to the $r_C$ and $r_X$ values. We must correct for the distance from the ideal
 \subsubsection{Rotating Into The Field's Plane}
+
+
 
 \section{The pointToPoint function}
 % BEGIN APPENDIX
@@ -354,12 +356,12 @@ The appendix will have fine technical details relating to the mathematics behind
 
 Finding the $\Delta x$ and $\Delta y$ is done from the following diagrams.
 
-\begin{figure}[h]
+\begin{figure}[h]\label{fig:xyfigs}
 \centering
 \caption{\textit{Given $C$, $X$, and $\theta$ find $y_{norm}$, $x_{norm}$ and $drift$ counter parts.}}
-\begin{minipage}{0.5\textwidth}
+\begin{subfigure}{0.5\textwidth}
+
 \centering
-\label{norm_fig}
 \begin{tikzpicture}[scale=0.75]
 %main diagram
 \draw (0,0) -- (8.5,0);
@@ -386,8 +388,10 @@ Finding the $\Delta x$ and $\Delta y$ is done from the following diagrams.
 \node[blue] at (7.5, -0.25){$x_{norm}$};
 \end{tikzpicture}
 \caption{Diagram of normal movement(not accounting drift)}
-\end{minipage}%
-\begin{minipage}{0.5\textwidth}
+\label{norm_fig}
+\end{subfigure}%
+\begin{subfigure}{0.5\textwidth}
+
 \centering
 \begin{tikzpicture}[rotate=-90,scale=0.75]
 %main diagram
@@ -413,8 +417,9 @@ Finding the $\Delta x$ and $\Delta y$ is done from the following diagrams.
 \draw[red,->,thick] (8,0) -- (7.13,0);
 \node[red] at (7.6, 0.75){$y_{drift}$};
 \end{tikzpicture}
-\caption{Diagram of drifting movement}
-\end{minipage}
+\caption{Diagram of drift movement}
+\label{drift_fig}
+\end{subfigure}
 \end{figure}
 
 For the purposes of this section we are assuming the tracking wheels are perfectly in the center of the robot. This is not possible in real robot design, but it simplifies the math. The corrections for real life applications are detailed in Section \ref{deltaneqtheta}. The $norm$ values do not account for drift and are determined from the y-wheel. $C$ is the value read from the sensor on the y-wheel. The $drift$ values are determined from the x-wheel. Likewise $X$ is the value read from the sensor on the x-wheel. We will first focus of the $norm$ values.
@@ -436,12 +441,29 @@ $$ \frac{C}{\theta} = r_C $$
 \raggedright
 We also add the distance from the the y-center of the robot to the wheel in actual application. We assume that distance is zero for these purposes.
 
-\paragraph{By using $r_C$} we can find values for $x_{norm}$ and $y_{norm}$. We can do this by using sine and cosine. Recall that on the unit circle $\sin\theta$ is the y value of a certain point and $\cos\theta$ is the x value of a certain point. Recognizing that Figure \ref{norm_fig} invokes the unit circle of radius $r_C$, we see that $y_{norm} = r_C \sin\theta$. We also find that $x_{norm} = -(r_C - r_C \cos\theta)$. We must subtract from the radius because we wish to find the $x$ distance from the start position to the current position, not from the origin to the start position. We also must make this value negative because the robot x is moving in the negative direction (Direction of movement is shown by the arrows in \ref{norm_fig}). Finally we can factor out $r_C$ to simplify the formula for $x_{norm}$. So finally we come to the following two formulas for our $norm$ values.
+\paragraph{By using $r_C$} we can find values for $x_{norm}$ and $y_{norm}$. We can do this by using sine and cosine. Recall that on the unit circle $\sin\theta$ is the y value of a certain point and $\cos\theta$ is the x value of a certain point. Recognizing that Figure \ref{norm_fig} invokes the unit circle of radius $r_C$, we see that $y_{norm} = r_C \sin\theta$. We also find that $x_{norm} = -(r_C - r_C \cos\theta)$. We must subtract from the radius because we wish to find the $x$ distance from the start position to the current position, not from the origin to the start position. We also must make this value negative because the robot x is moving in the negative direction (Direction of movement is shown by the arrows in Figure \ref{norm_fig}). Finally we can factor out $r_C$ to simplify the formula for $x_{norm}$. So finally we come to the following two formulas for our $norm$ values.
 
 \centering
 $$y_{norm} = r_C \sin\theta$$
 $$x_{norm} = -r_C(1-\cos\theta)$$
 
 \raggedright
+\pagebreak
+\subsubsection{Finding $drift$ values}
+\paragraph{We first must recognize that Figure \ref{drift_fig}} is a rotation $90^{\circ}$ clockwise of Figure \ref{norm_fig}. The computation for $r_X$ is idential to that of $r_C$ just with values swaped for the diffrent diagram. This means that we use $\cos$ for $y_{drift}$ and $\sin$ for $x_{drift}$. Contrary to the $norm$ values, neither term including $r_X$ is negative. This is seen in Figure \ref{drift_fig} as both arrows are pointing positive. So using the formulas from the $norm$ values, we derive the following formulas.
+$$ x_{drift} = r_X \sin\theta$$
+$$ y_{drift} = r_X (1-\cos\theta)$$
+
+\subsubsection{Getting $\Delta values$ from $norm$ and $drift$ Values}
+The last step of this process is to add the values together. We find each $\Delta value$ in the current plane by adding the corresponding $norm$ and $drift$ values together.
+$$ \Delta x = x_{norm} + x_{drfit} $$
+$$ \Delta y = y_{norm} + y_{drfit} $$
+
+We can the expand these values using our equations from the previous two subsections. Thus,
+$$ \Delta x =  -r_C (1-\cos\theta) + r_X \sin\theta $$
+$$ \Delta y =  r_C (1-\sin\theta) + r_X (1-\cos\theta) $$
+
+\textit{Q.E.F}
+
 \subsection{Deriving Formula to Rotate a Point}
 \end{document}
