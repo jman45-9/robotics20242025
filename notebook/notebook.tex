@@ -313,7 +313,8 @@ $$
     we don't have to do any trigonometry at this step. We can simply store the x, y change into the variable. We can shorthand this with the following equation.
     $$ (\Delta x, \Delta y) = (X,Y)_{robotOdomPos} $$
 \paragraph{When $\Delta\theta \neq 0$}\label{deltaneqtheta}
-Our job becomes much more difficult if the robot heading changes during the movement. Due to the mathematical complexity of this section most of it is shown in Appendix \ref{app_trighell}. We can now discuss the diffrences between the appendix content and real life application. The most major change is to the $r_C$ and $r_X$ values. We must correct for the distance from the ideal
+Our job becomes much more difficult if the robot heading changes during the movement. Due to the mathematical complexity of this section most of it is shown in Appendix \ref{app_trighell}. We can now discuss the diffrences between the appendix content and real life application. The most major change is to the $r_C$ and $r_X$ values. We must correct for the distance from the ideal position to the acutal postion of the wheels. Ideally, the odom wheels are position in the exact turn center of the robot, however we often must put them off center. We need to mesure this value and add them to the values of $r_C$ and $r_X$. So the equation for $r_C$ in the code are as follows.
+$$ r_C = \frac{C}{\theta} + centerDistance $$
 \subsubsection{Rotating Into The Field's Plane}
 
 
