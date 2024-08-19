@@ -35,6 +35,8 @@
 #define PROS_USE_LITERALS
 
 #include "api.h"
+#include "lemlib/api.hpp"
+#include "Robot.hpp"
 
 /**
  * You should add more #includes here
@@ -49,8 +51,8 @@
  * concurrently! The okapi namespace will export all symbols inside the pros
  * namespace.
  */
-// using namespace pros;
-// using namespace pros::literals;
+//using namespace pros;
+//using namespace pros::literals;
 // using namespace okapi;
 
 /**
@@ -76,5 +78,7 @@ void opcontrol(void);
  */
 //#include <iostream>
 #endif
+
+extern highstakes::Robot robot;
 
 #endif  // _PROS_MAIN_H_
