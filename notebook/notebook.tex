@@ -281,13 +281,22 @@ This section of the notebook will detail the Algorithms that we are using for ro
         We decided to use the rotation sensor because we benefit from the increased precision and better pivot.
     \end{center}
 
-\subsection{Odom Wheels}
-We have decided to use 2.75in wheels for odometry. We chose this size because it is the smallest size we have. It is beneficial to use the smallest wheels available because the take of the least space. <Add spacing information>
+\subsection{Tracking Wheels}
+We have decided to use 2.75in wheels for odometry. We chose this size because it is the smallest size we have. It is beneficial to use the smallest wheels available because the take of the least space. We also must mesure the distance from the tracking center of the robot to the face of each tracking wheels. See the diagram below for how we mesure tracking wheels.
+\begin{figure}[h]
+ \caption{Mesuring Odom Offsets}
+ \label{odom_offset_diagram}
+ \begin{tikzpicture}
+  \draw rectangle (0,0) rectangle++(10,10);
+ \end{tikzpicture}
+
+\end{figure}
+
 
 \pagebreak
 \subsection{Determining Field Position}
 \subsubsection{Finding $\Delta x$, $\Delta y$, and $\Delta\theta$}
-The first step in determining the change in the field position is determining how much the robot heading changed. We use a continuous heading approach meaning that the heading does not reset after completing a rotation. Turing clockwise is repeated by a negative number and turning counterclockwise is represented by a positive number. We find the change in heading with the following formula.
+The first step in determining the change in the field position is determining how much the robot heading changed. We use a continuous heading approach meaning that the heading does not reset after completing a rotation. Turing clockwise is repeated by a negative number and turning counterclockwise is represented by a positive number. We find the change in heading with the following formula. We choose the turing center of the robot for the tracking center because
 $$
     \Delta \theta = \theta_1-\theta_0
 $$
