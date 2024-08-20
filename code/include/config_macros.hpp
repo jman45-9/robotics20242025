@@ -3,7 +3,7 @@
 
 #include "api.h"
 #include "lemlib/api.hpp"
-#include "../helper_functions/helper_fuctions.hpp"
+#include "../helpers/helpers.hpp"
 namespace highstakes 
 {
 namespace config 
