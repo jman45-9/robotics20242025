@@ -72,7 +72,16 @@ void autonomous() {}
  * operator control task will be stopped. Re-enabling the robot will restart the
  * task, not resume it from where it left off.
  */
+pros::Controller master(pros::E_CONTROLLER_MASTER);
 void opcontrol() 
 {
+        //main control loop
+        while(true) {
+                robot.TankInput(
+                                master.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y),
+                                master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y)
+                               );
+        }
+
 	
 }

@@ -73,3 +73,8 @@ chassis(
        )
 {
 }
+
+void highstakes::Robot::TankInput(double leftY, double rightY) 
+{
+        this->chassis.tank(leftY, rightY);
+}

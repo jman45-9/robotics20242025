@@ -10,6 +10,7 @@ class Robot {
                 lemlib::Chassis chassis;
 
                 Robot();
+                void TankInput(double leftY, double rightY);
 
          private:
                 pros::MotorGroup leftmtrgroup;
