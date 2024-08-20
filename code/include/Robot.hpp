@@ -6,12 +6,6 @@
 
 namespace highstakes {
 class Robot {
-        public:
-                lemlib::Chassis chassis;
-
-                Robot();
-                void TankInput(double leftY, double rightY);
-
          private:
                 pros::MotorGroup leftmtrgroup;
                 pros::MotorGroup rightmtrgroup;
@@ -26,6 +20,13 @@ class Robot {
 
                 lemlib::ControllerSettings lateralpid;
                 lemlib::ControllerSettings angularpid;
+        public:
+                lemlib::Chassis chassis;
+
+                Robot();
+                void TankInput(double leftY, double rightY);
+
+
 };
 }
 #endif // ROBOT_ROBOTICS2425_HPP
