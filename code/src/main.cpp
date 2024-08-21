@@ -61,7 +61,7 @@ void autonomous()
 {
         /* BEGIN TEST CODE */
         robot.chassis.setPose(0,0,0);
-        robot.chassis.turnToHeading(90,100000);
+        robot.chassis.turnToHeading(180,100000);
         /* END TEST CODE */
 }
 

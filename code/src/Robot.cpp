@@ -56,8 +56,8 @@ lateralpid(
         ),
 angularpid(
                 2, //kp
-                0, //ki
-                10, //kd
+                10, //ki
+                0, //kd
                 3, //anti windup
                 1, // small err range in degrees
                 100, //small err range timeout in mil-sec
