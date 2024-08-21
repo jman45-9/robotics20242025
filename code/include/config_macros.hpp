@@ -14,9 +14,9 @@ const int DRIVE_FRONT_LEFT = 8;
 const int DRIVE_MID_LEFT = 10;
 const int DRIVE_BACK_LEFT = 7;
 
-const int DRIVE_FRONT_RIGHT = 1;
-const int DRIVE_MID_RIGHT = 9;
-const int DRIVE_BACK_RIGHT = 5;
+const int DRIVE_FRONT_RIGHT = -1;
+const int DRIVE_MID_RIGHT = -5;
+const int DRIVE_BACK_RIGHT = -4;
 
 const int IMU = 15;
 const int ODOM_ROT_VER = 20;
