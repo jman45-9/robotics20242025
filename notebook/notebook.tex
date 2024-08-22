@@ -322,53 +322,15 @@ $$
     we don't have to do any trigonometry at this step. We can simply store the x, y change into the variable. We can shorthand this with the following equation.
     $$ (\Delta x, \Delta y) = (X,Y)_{robotOdomPos} $$
 \paragraph{When $\Delta\theta \neq 0$}\label{deltaneqtheta}
-Our job becomes much more difficult if the robot heading changes during the movement. Due to the mathematical complexity of this section most of it is shown in Appendix \ref{app_trighell}. We can now discuss the diffrences between the appendix content and real life application. The most major change is to the $r_C$ and $r_X$ values. We must correct for the distance from the ideal position to the acutal postion of the wheels. Ideally, the odom wheels are position in the exact turn center of the robot, however we often must put them off center. We need to mesure this value and add them to the values of $r_C$ and $r_X$. So the equation for $r_C$ in the code are as follows.
-$$ r_C = \frac{C}{\theta} + centerDistance $$
-\subsubsection{Rotating Into The Field's Plane}
+Our job becomes much more difficult if the robot heading changes during the movement. We must use the values from the tracking wheels and the inertial sensor readout to determine the actual change in position. The following is an explanation of this conept.
 
-
-
-\section{The pointToPoint function}
-% BEGIN APPENDIX
-%
-%
-% BEGIN APPENDIX
-\newpage
-\appendix
-\section*{Appendix}
-\addcontentsline{toc}{section}{Appendix}
-The appendix will have fine technical details relating to the mathematics behind algorithms or specific technical concepts.
-\section{Mathematical Derivations for Odometry Functions}
-\subsection{Deriving the degToIn Function} \label{app_degToIn}
-    The degToIn function uses basic circle geometry to convert the degrees a wheel rotates into the distance the wheel moves in inches using the wheel diameter. This function hinges on the principle that a wheel moves a distance equivalent to it's circumference for each full rotation. We define circumference with the equation.
-    $$ C = d\pi $$
-    \center\textit{Where $C$ is the circumference and $d$ is the diameter of the circle.}
-
-    \raggedright
-    This formula gives us the distance that the wheel moves if the wheel moves one rotation at a time. Sadly, though, in real life the wheel moves in fractional increments. We can represent this fractional rotation by multiplying the circumference by the same fraction. We find this fraction by dividing the measured valued by the amount of one rotation, in this case 360 degrees. We can use this fraction of a rotation to get the distance by multiplying it by the wheel circumference. So we use the following formula.
-    $$ D = \frac{\theta^\circ}{360} \cdot C $$
-    \center\textit{Where $D$ is the distance the wheel moved, $\theta^\circ$ is the degrees the wheel rotates, and $C$ is the circumference of the wheel.}
-
-    \raggedright
-    Finally we add this function into our code. We use M PI to put $\pi$ into the code. The function goes as follows.
-
-    \begin{verbatim}
-     double degToIn(double deg, double wheelDiam)
-     {
-         return (deg * (M_PI / 360.0)) * (wheelDiam);
-     }
-    \end{verbatim}
-
-    \textit{Q.E.F}
-
-    \pagebreak
-\subsection{Deriving Formulas to get $\Delta x$ and $\Delta y$ in the current plane when $\Delta\theta \neq 0$} \label{app_trighell}
+\subsubsection{Deriving Formulas to find $\Delta x$ and $\Delta y$ in the current plane when $\Delta\theta \neq 0$} \label{app_trighell}
 
 Finding the $\Delta x$ and $\Delta y$ is done from the following diagrams.
 
 \begin{figure}[h]\label{fig:xyfigs}
 \centering
-\caption{\textit{Given $C$, $X$, and $\theta$ find $y_{norm}$, $x_{norm}$ and $drift$ counter parts.}}
+\caption{\textit{Given $C$, $X$, and $\theta$ find $y_{norm}$, $x_{norm}$ and $drift$ counterparts.}}
 \begin{subfigure}{0.5\textwidth}
 
 \centering
@@ -433,8 +395,7 @@ Finding the $\Delta x$ and $\Delta y$ is done from the following diagrams.
 \end{figure}
 
 For the purposes of this section we are assuming the tracking wheels are perfectly in the center of the robot. This is not possible in real robot design, but it simplifies the math. The corrections for real life applications are detailed in Section \ref{deltaneqtheta}. The $norm$ values do not account for drift and are determined from the y-wheel. $C$ is the value read from the sensor on the y-wheel. The $drift$ values are determined from the x-wheel. Likewise $X$ is the value read from the sensor on the x-wheel. We will first focus of the $norm$ values.
-\subsubsection{Finding $norm$ values}
-\paragraph{The first step is to find $r_C$.} This value is the radius the the arc $C$, or the arc which the robot travels along(assuming no drifting). We use the formula for arc length to find the value $r_C$.
+\paragraph{To find the norm values we must find $r_C$.} This value is the radius the the arc $C$, or the arc which the robot travels along(assuming no drifting). We use the formula for arc length to find the value $r_C$.
 
 \centering
 Formula for Arc Length
@@ -459,13 +420,12 @@ $$x_{norm} = -r_C(1-\cos\theta)$$
 
 \raggedright
 \pagebreak
-\subsubsection{Finding $drift$ values}
-\paragraph{We first must recognize that Figure \ref{drift_fig}} is a rotation $90^{\circ}$ clockwise of Figure \ref{norm_fig}. The computation for $r_X$ is idential to that of $r_C$ just with values swaped for the diffrent diagram. This means that we use $\cos$ for $y_{drift}$ and $\sin$ for $x_{drift}$. Contrary to the $norm$ values, neither term including $r_X$ is negative. This is seen in Figure \ref{drift_fig} as both arrows are pointing positive. So using the formulas from the $norm$ values, we derive the following formulas.
+
+\paragraph{To find the drift values,} we first must recognize that Figure \ref{drift_fig} is a rotation $90^{\circ}$ clockwise of Figure \ref{norm_fig}. The computation for $r_X$ is idential to that of $r_C$ just with values swaped for the diffrent diagram. This means that we use $\cos$ for $y_{drift}$ and $\sin$ for $x_{drift}$. Contrary to the $norm$ values, neither term including $r_X$ is negative. This is seen in Figure \ref{drift_fig} as both arrows are pointing positive. So using the formulas from the $norm$ values, we derive the following formulas.
 $$ x_{drift} = r_X \sin\theta$$
 $$ y_{drift} = r_X (1-\cos\theta)$$
 
-\subsubsection{Getting $\Delta values$ from $norm$ and $drift$ Values}
-The last step of this process is to add the values together. We find each $\Delta value$ in the current plane by adding the corresponding $norm$ and $drift$ values together.
+\paragraph{The last step of this process is to add the values together.} We find each $\Delta value$ in the current plane by adding the corresponding $norm$ and $drift$ values together.
 $$ \Delta x = x_{norm} + x_{drfit} $$
 $$ \Delta y = y_{norm} + y_{drfit} $$
 
@@ -474,6 +434,43 @@ $$ \Delta x =  -r_C (1-\cos\theta) + r_X \sin\theta $$
 $$ \Delta y =  r_C (1-\sin\theta) + r_X (1-\cos\theta) $$
 
 \textit{Q.E.F}
+\subsubsection{Rotating Into The Field's Plane}
 
-\subsection{Deriving Formula to Rotate a Point}
+
+
+\section{The pointToPoint function}
+% BEGIN APPENDIX
+%
+%
+% BEGIN APPENDIX
+\newpage
+\appendix
+\section*{Appendix}
+\addcontentsline{toc}{section}{Appendix}
+The appendix will have fine technical details relating to the mathematics behind algorithms or specific technical concepts.
+\section{Derivations for Helper Functions}
+\subsection{Deriving the degToIn Function} \label{app_degToIn}
+    The degToIn function uses basic circle geometry to convert the degrees a wheel rotates into the distance the wheel moves in inches using the wheel diameter. This function hinges on the principle that a wheel moves a distance equivalent to it's circumference for each full rotation. We define circumference with the equation.
+    $$ C = d\pi $$
+    \center\textit{Where $C$ is the circumference and $d$ is the diameter of the circle.}
+
+    \raggedright
+    This formula gives us the distance that the wheel moves if the wheel moves one rotation at a time. Sadly, though, in real life the wheel moves in fractional increments. We can represent this fractional rotation by multiplying the circumference by the same fraction. We find this fraction by dividing the measured valued by the amount of one rotation, in this case 360 degrees. We can use this fraction of a rotation to get the distance by multiplying it by the wheel circumference. So we use the following formula.
+    $$ D = \frac{\theta^\circ}{360} \cdot C $$
+    \center\textit{Where $D$ is the distance the wheel moved, $\theta^\circ$ is the degrees the wheel rotates, and $C$ is the circumference of the wheel.}
+
+    \raggedright
+    Finally we add this function into our code. We use M PI to put $\pi$ into the code. The function goes as follows.
+
+    \begin{verbatim}
+     double degToIn(double deg, double wheelDiam)
+     {
+         return (deg * (M_PI / 360.0)) * (wheelDiam);
+     }
+    \end{verbatim}
+
+    \textit{Q.E.F}
+
+    \pagebreak
+
 \end{document}
