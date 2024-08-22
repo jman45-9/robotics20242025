@@ -254,20 +254,20 @@ This section of the notebook will detail the Algorithms that we are using for ro
         }
     \end{verbatim}
 
-    If the PID has settled the program tells the robot to brake and stop turning. After braking the loop ends and the robot has turned to the correct position. This concludes the section on the PID and we will now move onto odometry.
+    If the PID has settled the program tells the robot to brake and stop turning. After braking the loop ends and the robot has turned to the correct position. This concludes the section on the PID and we will now move onto optometry.
 
 
 \pagebreak
-\section{Basics of Odometry}
+\section{Basics of Optometry}
 \subsection{What is Odometry}
     Odometry allows the robot to keep track of where it is on the field. In this imperfection, the robot keeps track of where it is relative to it's starting position. Odometry works by tracking the rotation of specific wheels and the heading of the robot.
     %should add odom wheel image here later :)
 
     By using the data from the wheels and sensors we are able to
-    With odometry we are able to tell the robot to go to a point as opposed to manually setting turns and movement. This allows for more precise programming that can remove errors in real applications.
+    With Odometry we are able to tell the robot to go to a point as opposed to manually setting turns and movement. This allows for more precise programming that can remove errors in real applications.
 
 \subsection{Odometry Sensors}
-    Working with odometry requires two kinds sensors. One to track the robot heading, the inertial sensor, and one to track the position of the odom wheels, the rotation sensor. We could also use a motor encoder, a comparison table of the two follows this.
+    Working with Odometry requires two kinds sensors. One to track the robot heading, the inertial sensor, and one to track the position of the odom wheels, the rotation sensor. We could also use a motor encoder, a comparison table of the two follows this.
     \begin{center}
         \begin{tabular}{c|c}
             Rotation Sensor & Motor Encoder \\
@@ -282,12 +282,32 @@ This section of the notebook will detail the Algorithms that we are using for ro
     \end{center}
 
 \subsection{Tracking Wheels}
-We have decided to use 2.75in wheels for odometry. We chose this size because it is the smallest size we have. It is beneficial to use the smallest wheels available because the take of the least space. We also must mesure the distance from the tracking center of the robot to the face of each tracking wheels. See the diagram below for how we mesure tracking wheels.
+We have decided to use 2.75in wheels for odometry. We chose this size because it is the smallest size we have. It is beneficial to use the smallest wheels available because the take of the least space. We also must measure the distance from the tracking center of the robot to the face of each tracking wheels. See Figure \ref{FIG::odom_offsets} below for how we measure tracking wheel offsets.
+\def\wheelSize{1.5}
 \begin{figure}[h]
- \caption{Mesuring Odom Offsets}
+ \caption{Measuring Odom Offsets}
+ \label{FIG::odom_offsets}
+ \centering
  \label{odom_offset_diagram}
  \begin{tikzpicture}
-  \draw rectangle (0,0) rectangle++(10,10);
+  \draw (0,0) rectangle (5,5);
+  \draw (-0.5,3) rectangle (0,3+\wheelSize);
+  \draw (-0.5,0.5) rectangle (0,0.5+\wheelSize);
+  \draw (5.5,3) rectangle (5,3+\wheelSize);
+  \draw (5.5,0.5) rectangle (5,0.5+\wheelSize);
+
+  \draw[red, fill] (2.5,2.5) circle[radius=0.1];
+  \node[red] at (2.5,2.9){Tracking Center};
+
+  \draw (0.4,1) rectangle (0.9,1+\wheelSize);
+  \draw [green](0.9,1.5) -- (2.5,1.5);
+  \draw (2.5,1.2) -- (2.5,2.5);
+  \node[green] at (1.7,1.2){Vertical};
+
+  \draw (2.7,0.5) rectangle (2.7+\wheelSize, 1);
+  \draw[blue](3.5,1) -- (3.5,2.5);
+  \draw (2.5,2.5) -- (3.7,2.5);
+  \node[rotate=270,blue] at (4.5,2){Horizontal};
  \end{tikzpicture}
 
 \end{figure}
@@ -296,7 +316,7 @@ We have decided to use 2.75in wheels for odometry. We chose this size because it
 \pagebreak
 \subsection{Determining Field Position}
 \subsubsection{Finding $\Delta x$, $\Delta y$, and $\Delta\theta$}
-The first step in determining the change in the field position is determining how much the robot heading changed. We use a continuous heading approach meaning that the heading does not reset after completing a rotation. Turing clockwise is repeated by a negative number and turning counterclockwise is represented by a positive number. We find the change in heading with the following formula. We choose the turing center of the robot for the tracking center because
+The first step in determining the change in the field position is determining how much the robot heading changed. We use a continuous heading approach meaning that the heading does not reset after completing a rotation. Turing clockwise is repeated by a negative number and turning counterclockwise is represented by a positive number. We find the change in heading with the following formula. We choose the turning center of the robot for the tracking center because
 $$
     \Delta \theta = \theta_1-\theta_0
 $$
@@ -322,7 +342,7 @@ $$
     we don't have to do any trigonometry at this step. We can simply store the x, y change into the variable. We can shorthand this with the following equation.
     $$ (\Delta x, \Delta y) = (X,Y)_{robotOdomPos} $$
 \paragraph{When $\Delta\theta \neq 0$}\label{deltaneqtheta}
-Our job becomes much more difficult if the robot heading changes during the movement. We must use the values from the tracking wheels and the inertial sensor readout to determine the actual change in position. The following is an explanation of this conept.
+Our job becomes much more difficult if the robot heading changes during the movement. We must use the values from the tracking wheels and the inertial sensor readout to determine the actual change in position. The following is an explanation of this concept.
 
 \subsubsection{Deriving Formulas to find $\Delta x$ and $\Delta y$ in the current plane when $\Delta\theta \neq 0$} \label{app_trighell}
 
@@ -421,13 +441,13 @@ $$x_{norm} = -r_C(1-\cos\theta)$$
 \raggedright
 \pagebreak
 
-\paragraph{To find the drift values,} we first must recognize that Figure \ref{drift_fig} is a rotation $90^{\circ}$ clockwise of Figure \ref{norm_fig}. The computation for $r_X$ is idential to that of $r_C$ just with values swaped for the diffrent diagram. This means that we use $\cos$ for $y_{drift}$ and $\sin$ for $x_{drift}$. Contrary to the $norm$ values, neither term including $r_X$ is negative. This is seen in Figure \ref{drift_fig} as both arrows are pointing positive. So using the formulas from the $norm$ values, we derive the following formulas.
+\paragraph{To find the drift values,} we first must recognize that Figure \ref{drift_fig} is a rotation $90^{\circ}$ clockwise of Figure \ref{norm_fig}. The computation for $r_X$ is identical to that of $r_C$ just with values swapped for the different diagram. This means that we use $\cos$ for $y_{drift}$ and $\sin$ for $x_{drift}$. Contrary to the $norm$ values, neither term including $r_X$ is negative. This is seen in Figure \ref{drift_fig} as both arrows are pointing positive. So using the formulas from the $norm$ values, we derive the following formulas.
 $$ x_{drift} = r_X \sin\theta$$
 $$ y_{drift} = r_X (1-\cos\theta)$$
 
 \paragraph{The last step of this process is to add the values together.} We find each $\Delta value$ in the current plane by adding the corresponding $norm$ and $drift$ values together.
-$$ \Delta x = x_{norm} + x_{drfit} $$
-$$ \Delta y = y_{norm} + y_{drfit} $$
+$$ \Delta x = x_{norm} + x_{drift} $$
+$$ \Delta y = y_{norm} + y_{drift} $$
 
 We can the expand these values using our equations from the previous two subsections. Thus,
 $$ \Delta x =  -r_C (1-\cos\theta) + r_X \sin\theta $$
