@@ -283,6 +283,9 @@ This section of the notebook will detail the Algorithms that we are using for ro
 
 \subsection{Tracking Wheels}
 We have decided to use 2.75in wheels for odometry. We chose this size because it is the smallest size we have. It is beneficial to use the smallest wheels available because the take of the least space. We also must measure the distance from the tracking center of the robot to the face of each tracking wheels. See Figure \ref{FIG::odom_offsets} below for how we measure tracking wheel offsets.
+
+One final note about the sign of the distance. Based on the postion of the wheel relative to the tracking center we make the distance postive or negative. Front or left is positive and back or right is negative.
+
 \def\wheelSize{1.5}
 \begin{figure}[h]
  \caption{Measuring Odom Offsets}
@@ -300,16 +303,16 @@ We have decided to use 2.75in wheels for odometry. We chose this size because it
   \node[red] at (2.5,2.9){Tracking Center};
 
   \draw (0.4,1) rectangle (0.9,1+\wheelSize);
-  \draw [green](0.9,1.5) -- (2.5,1.5);
+  \draw [green,very thick](0.9,1.5) -- (2.5,1.5);
   \draw (2.5,1.2) -- (2.5,2.5);
   \node[green] at (1.7,1.2){Vertical};
 
   \draw (2.7,0.5) rectangle (2.7+\wheelSize, 1);
-  \draw[blue](3.5,1) -- (3.5,2.5);
+  \draw[blue,very thick](3.5,1) -- (3.5,2.5);
   \draw (2.5,2.5) -- (3.7,2.5);
   \node[rotate=270,blue] at (4.5,2){Horizontal};
+  \node[red] at (2.5,4.5){Front};
  \end{tikzpicture}
-
 \end{figure}
 
 
@@ -430,7 +433,7 @@ $$ C = \theta r_C $$
 $$ \frac{C}{\theta} = r_C $$
 
 \raggedright
-We also add the distance from the the y-center of the robot to the wheel in actual application. We assume that distance is zero for these purposes.
+We also add the distance from the the y-center of the robot to the wheel in actual application. We assume that distance is zero for theory purposes.
 
 \paragraph{By using $r_C$} we can find values for $x_{norm}$ and $y_{norm}$. We can do this by using sine and cosine. Recall that on the unit circle $\sin\theta$ is the y value of a certain point and $\cos\theta$ is the x value of a certain point. Recognizing that Figure \ref{norm_fig} invokes the unit circle of radius $r_C$, we see that $y_{norm} = r_C \sin\theta$. We also find that $x_{norm} = -(r_C - r_C \cos\theta)$. We must subtract from the radius because we wish to find the $x$ distance from the start position to the current position, not from the origin to the start position. We also must make this value negative because the robot x is moving in the negative direction (Direction of movement is shown by the arrows in Figure \ref{norm_fig}). Finally we can factor out $r_C$ to simplify the formula for $x_{norm}$. So finally we come to the following two formulas for our $norm$ values.
 
