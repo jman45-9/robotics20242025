@@ -22,8 +22,26 @@ This section details the way in which we are managing our code for this robotics
 \section{Version Control: Git}
 For our version control system this year we have chosen the popular Git version control system. Git keeps track of each version of our code and also allows us to revert back if needed. We can also create multiple branches so we can work on a new part of the code without impacting the functioning code. Also, through the use of GitHub we can easily create a copy of our code and version history which lives in the web. Git also facilitates collaboration between team members working on the drive code. It is for these reasons that we have chosen Git for our version control for the 2024-2025 VRC competition.
 \section{Robot API: Purdue PROS}
-We have decided to use the Purdue PROS API to interface with our robot. We have chosen this API for it's superior performance and documentation over the standard VEX API. By using PROS we can also use our preferred code editors.
+We have decided to use the Purdue PROS API to interface with our robot. We have chosen this API for it's superior performance and documentation over the standard VEX API, we also have more experience with PROS than VEXCODE. PROS also has great support for libraries. PROS does have one big drawback and that is the lack of suppoort for newer Vex equitment such as the AI Vison Sensor. Being a third party software, the PROS devolopment team does not have access to the VEX Software Delvelopment Kit(SDK).
+\begin{figure}[h]
+        \caption{API Comparison Table}
+        \label{TABLE::API_COMP}
+        \centering
+        \begin{tabular}{c|c}
+        PROS API & VEX API \\
+        \hline
+        Superior Performance & Can Be Sluggish \\
+        Used Last Year & Used Two Years Ago(First Year) \\
+        Readable Documentation & Some Docs Are Poorly Organized \\
+        Third Party & Offical VEX \\
+        Stable & New Fetaures Earlier \\
+    \end{tabular}
+\end{figure}
+
+
 \section{Programming Libraries}
+For this year we have decided to use the library LemLib. We have chosen this library becuase it is a popular library for the PROS API. Lemlib gives us esasy to use PID controllers and odometry algorithms such as point to point and boomerang. In accordance with the REC Code of Conduct, we have made sure that we understand the algorithm behind Lemlib. The notebook details each of these algorithms.
+
 \section*{Algorithms for Programming}
 \addcontentsline{toc}{section}{Algorithms for Programming}
 This section of the notebook will detail the Algorithms that we are using for robot control.
@@ -459,9 +477,12 @@ $$ \Delta y =  r_C (1-\sin\theta) + r_X (1-\cos\theta) $$
 \textit{Q.E.F}
 \subsubsection{Rotating Into The Field's Plane}
 
-
-
 \section{The pointToPoint function}
+
+\section{Debugging}
+
+\subsection{Brain Crashes 2024-8-19}
+
 % BEGIN APPENDIX
 %
 %
@@ -470,7 +491,7 @@ $$ \Delta y =  r_C (1-\sin\theta) + r_X (1-\cos\theta) $$
 \appendix
 \section*{Appendix}
 \addcontentsline{toc}{section}{Appendix}
-The appendix will have fine technical details relating to the mathematics behind algorithms or specific technical concepts.
+The appendix will detail background information and helper functions which are not specfic to robotics.
 \section{Derivations for Helper Functions}
 \subsection{Deriving the degToIn Function} \label{app_degToIn}
     The degToIn function uses basic circle geometry to convert the degrees a wheel rotates into the distance the wheel moves in inches using the wheel diameter. This function hinges on the principle that a wheel moves a distance equivalent to it's circumference for each full rotation. We define circumference with the equation.
