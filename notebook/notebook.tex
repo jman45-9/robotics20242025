@@ -476,6 +476,34 @@ $$ \Delta y =  r_C (1-\sin\theta) + r_X (1-\cos\theta) $$
 
 \textit{Q.E.F}
 \subsubsection{Rotating Into The Field's Plane}
+We have now found the change in postion but it is from the robots previous frame of refrence.
+We must rotate the point from the robots frame of refrence to the fields frame of refrence. We know the heading of the robot relative to the fields so we can use it to find the new point.
+We will be refrencing the following diagram.
+
+\begin{figure}
+\caption{Point Rotation Diagram}
+\label{FIG::PointRot}
+\centering
+\begin{tikzpicture}
+    %axes
+    \draw [->](0,0) -- (0,3.5);
+    \draw[->] (0,0) -- (4,0);
+    %vectors
+    \draw[->] (0,0) -- (4,1);
+    \draw[->] (0,0) -- (2.828,3);
+    \draw (2,0) arc (0:26.5:1);
+    \draw (1,0.3) arc (5:45:0.8);
+    %labels
+    \node at (2.3, 0.2){$v$};
+    \node at (1.1, 0.7){$\theta$};
+    \node at (4.6,1){$(x,y)$};
+    \node at (3.6,3){$(x',y')$};
+
+
+\end{tikzpicture}
+\end{figure}
+
+\paragraph{To find the $x_1$}
 
 \section{The pointToPoint function}
 
