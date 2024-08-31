@@ -476,12 +476,88 @@ $$ \Delta y =  r_C (1-\sin\theta) + r_X (1-\cos\theta) $$
 
 \textit{Q.E.F}
 \subsubsection{Rotating Into The Field's Plane}
+We have now found the change in postion but it is from the robots previous frame of refrence.
+We must rotate the point from the robots frame of refrence to the fields frame of refrence. We know the heading of the robot relative to the fields so we can use it to find the new point.
+We will be refrencing the following diagram.
+
+\begin{figure}
+\caption{Point Rotation Diagram}
+\label{FIG::PointRot}
+\centering
+\begin{tikzpicture}
+    %axes
+    \draw [->](0,0) -- (0,3.5);
+    \draw[->] (0,0) -- (4,0);
+    %vectors
+    \draw[->] (0,0) -- (4,1);
+    \draw[->] (0,0) -- (2.828,3);
+    \draw (2,0) arc (0:26.5:1);
+    \draw (1,0.3) arc (5:45:0.8);
+    %labels
+    \node at (2.3, 0.2){$v$};
+    \node at (1.1, 0.7){$\theta$};
+    \node at (4.6,1){$(x,y)$};
+    \node at (3.6,3){$(x',y')$};
+
+
+\end{tikzpicture}
+\end{figure}
+
+\paragraph{To find the $x_1$}
 
 \section{The pointToPoint function}
 
 \section{Debugging}
 
 \subsection{Brain Crashes 2024-8-19}
+We ran into a runtime error during inital testing of our program. As soon as the program began it would crash. It gave us limited information, including a state printout. A state printout is where the program simply reports the current memory adresses on the CPU and runtime stack. See Figure \ref{FIG::statePrint} for an example.
+
+By using a tool bundled with our cross complier we were able to locate possible error zones (Figure \ref{FIG::statePrint})
+Both of these error zones were within library files, which we do not have easy access to.
+The best course of action was decided to be to reintall Lemlib. This made no diffrence.
+Still thinking that this was a problem with the library, we tried installing an old version of Lemlib. This also made no difference.
+After talking with another team and collaborating on the debugging process, we found that the problem was with the order of intalization in the Robot class. It seems to of stemed from a misunderstanding in the use of intalizer lists.
+We thought that the intializer list would begin at the top and step down, howevet it seems that
+the intalizer list looks at the order of declarations in the class declaration and does it in that order. Due to the fact that we had declared chassis before it's component pieces, the program crashed. We fixed this by moving the chassis declaration to the bottom of the declration stack.
+Correct and incorrect code can be found in Figure \ref{CODE::initOrderSimp}.
+\begin{figure}
+ \centering
+ \caption{State Printout and Potential Error Areas}
+ \label{FIG::statePrint}
+ \includegraphics[scale=0.1]{statePrint}
+\end{figure}
+
+\pagebreak
+\begin{figure}
+\begin{subfigure}{0.5\textwidth}
+
+\textit{Incorrect Intalization Order}
+\begin{verbatim}
+     class Robot
+     {
+        Chassis chassis;
+        Drivetrain drivetrain;
+        ControllerSet PIDS;
+        Sensors odom_sensors;
+     }
+\end{verbatim}
+\end{subfigure}%
+\begin{subfigure}{0.5\textwidth}
+\textit{Correct Intalization Order}
+\begin{verbatim}
+     class Robot
+     {
+        Drivetrain drivetrain;
+        ControllerSet PIDS;
+        Sensors odom_sensors;
+        Chassis chassis;
+     }
+
+\end{verbatim}
+\end{subfigure}
+\caption{Initialization Order(Simplified)}
+\label{CODE::initOrderSimp}
+\end{figure}
 
 % BEGIN APPENDIX
 %
