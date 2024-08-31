@@ -24,6 +24,7 @@ const int ODOM_ROT_HOR = 11;
 
 // threewire port constants
 // const char <name> = <port_letter>
+const char ADI_CLAMP_PORT = 'a';
 
 // robot drive specs
 const double DRIVE_WHEEL_DIAM = lemlib::Omniwheel::NEW_325; //(in)

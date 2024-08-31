@@ -65,6 +65,10 @@ angularpid(
                 500, // large err timeout in mil-sec
                 0 // max accleration (slew)
         ),
+clamp (
+                highstakes::config::ADI_CLAMP_PORT,
+                LOW
+      ),
 chassis(
                 this->drivetrain,
                 this->lateralpid,
@@ -77,4 +81,10 @@ chassis(
 void highstakes::Robot::TankInput(double leftY, double rightY) 
 {
         this->chassis.tank(leftY, rightY);
+}
+
+void highstakes::Robot::clampToggle()
+{
+        this->clampState = !this->clampState;
+        this->clamp.set_value(this->clampState);
 }
