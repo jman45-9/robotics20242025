@@ -79,6 +79,7 @@ void autonomous()
  * task, not resume it from where it left off.
  */
 pros::Controller master(pros::E_CONTROLLER_MASTER);
+bool clamp_latch = false;
 void opcontrol() 
 {
         //main control loop
@@ -87,7 +88,18 @@ void opcontrol()
                                 master.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y),
                                 master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y)
                                );
+                // we need a latch because it pulses otherwise
+                if(master.get_digital(pros::E_CONTROLLER_DIGITAL_R2) && !clamp_latch)
+                {
+                        robot.clampToggle();
+                        clamp_latch = true;
+                }
+                else if(!master.get_digital(pros::E_CONTROLLER_DIGITAL_R2))
+                {
+                        clamp_latch = false;
+                }
         }
 
-	
+
 }
+	
