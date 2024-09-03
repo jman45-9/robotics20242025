@@ -5,6 +5,8 @@
 \usepackage{caption}
 \usepackage{subcaption}
 
+\newcommand{\rulesep}{\unskip\ \vrule\ }
+
 \title{47510W Phoenix Horizon Programming}
 \date{2024-2025}
 \author{}
@@ -22,7 +24,7 @@ This section details the way in which we are managing our code for this robotics
 \section{Version Control: Git}
 For our version control system this year we have chosen the popular Git version control system. Git keeps track of each version of our code and also allows us to revert back if needed. We can also create multiple branches so we can work on a new part of the code without impacting the functioning code. Also, through the use of GitHub we can easily create a copy of our code and version history which lives in the web. Git also facilitates collaboration between team members working on the drive code. It is for these reasons that we have chosen Git for our version control for the 2024-2025 VRC competition.
 \section{Robot API: Purdue PROS}
-We have decided to use the Purdue PROS API to interface with our robot. We have chosen this API for it's superior performance and documentation over the standard VEX API, we also have more experience with PROS than VEXCODE. PROS also has great support for libraries. PROS does have one big drawback and that is the lack of suppoort for newer Vex equitment such as the AI Vison Sensor. Being a third party software, the PROS devolopment team does not have access to the VEX Software Delvelopment Kit(SDK).
+We have decided to use the Purdue PROS API to interface with our robot. We have chosen this API for it's superior performance and documentation over the standard VEX API, we also have more experience with PROS than VEXCODE. PROS also has great support for libraries. PROS does have one big drawback and that is the lack of support for newer Vex equipment such as the AI Vision Sensor. Being a third party software, the PROS development team does not have access to the VEX Software Development Kit(SDK).
 \begin{figure}[h]
         \caption{API Comparison Table}
         \label{TABLE::API_COMP}
@@ -33,14 +35,14 @@ We have decided to use the Purdue PROS API to interface with our robot. We have 
         Superior Performance & Can Be Sluggish \\
         Used Last Year & Used Two Years Ago(First Year) \\
         Readable Documentation & Some Docs Are Poorly Organized \\
-        Third Party & Offical VEX \\
-        Stable & New Fetaures Earlier \\
+        Third Party & Official VEX \\
+        Stable & New Features Earlier \\
     \end{tabular}
 \end{figure}
 
 
 \section{Programming Libraries}
-For this year we have decided to use the library LemLib. We have chosen this library becuase it is a popular library for the PROS API. Lemlib gives us esasy to use PID controllers and odometry algorithms such as point to point and boomerang. In accordance with the REC Code of Conduct, we have made sure that we understand the algorithm behind Lemlib. The notebook details each of these algorithms.
+For this year we have decided to use the library LemLib. We have chosen this library because it is a popular library for the PROS API. LemLib gives us essay to use PID controllers and odometry algorithms such as point to point and boomerang. In accordance with the REC Code of Conduct, we have made sure that we understand the algorithm behind LemLib. The notebook details each of these algorithms.
 
 \section*{Algorithms for Programming}
 \addcontentsline{toc}{section}{Algorithms for Programming}
@@ -285,7 +287,7 @@ This section of the notebook will detail the Algorithms that we are using for ro
     With Odometry we are able to tell the robot to go to a point as opposed to manually setting turns and movement. This allows for more precise programming that can remove errors in real applications.
 
 \subsection{Odometry Sensors}
-    Working with Odometry requires two kinds sensors. One to track the robot heading, the inertial sensor, and one to track the position of the odom wheels, the rotation sensor. We could also use a motor encoder, a comparison table of the two follows this.
+    Working with Odometry requires two kinds sensors. One to track the robot heading, the inertial sensor, and one to track the position of the tracking wheels, the rotation sensor. We could also use a motor encoder, a comparison table of the two follows this.
     \begin{center}
         \begin{tabular}{c|c}
             Rotation Sensor & Motor Encoder \\
@@ -302,7 +304,7 @@ This section of the notebook will detail the Algorithms that we are using for ro
 \subsection{Tracking Wheels}
 We have decided to use 2.75in wheels for odometry. We chose this size because it is the smallest size we have. It is beneficial to use the smallest wheels available because the take of the least space. We also must measure the distance from the tracking center of the robot to the face of each tracking wheels. See Figure \ref{FIG::odom_offsets} below for how we measure tracking wheel offsets.
 
-One final note about the sign of the distance. Based on the postion of the wheel relative to the tracking center we make the distance postive or negative. Front or left is positive and back or right is negative.
+One final note about the sign of the distance. Based on the position of the wheel relative to the tracking center we make the distance positive or negative. Front or left is positive and back or right is negative.
 
 \def\wheelSize{1.5}
 \begin{figure}[h]
@@ -343,7 +345,7 @@ $$
 $$
 \textit{Where $theta_1$ is the current heading, $\theta_0$ was the last heading, and $\Delta \theta$ is the change in heading}
 
-Next we must get the change on both odom wheels by using our rotation sensors. We can use the following formulas.
+Next we must get the change on both tracking wheels by using our rotation sensors. We can use the following formulas.
 
 \textit{Let $degToIn(\theta)$ is a function which converts a value in degrees to a value in inches using the wheel diameter. (Wheel diameter is assumed in these formulas so is not listed.)}
 
@@ -460,7 +462,6 @@ $$y_{norm} = r_C \sin\theta$$
 $$x_{norm} = -r_C(1-\cos\theta)$$
 
 \raggedright
-\pagebreak
 
 \paragraph{To find the drift values,} we first must recognize that Figure \ref{drift_fig} is a rotation $90^{\circ}$ clockwise of Figure \ref{norm_fig}. The computation for $r_X$ is identical to that of $r_C$ just with values swapped for the different diagram. This means that we use $\cos$ for $y_{drift}$ and $\sin$ for $x_{drift}$. Contrary to the $norm$ values, neither term including $r_X$ is negative. This is seen in Figure \ref{drift_fig} as both arrows are pointing positive. So using the formulas from the $norm$ values, we derive the following formulas.
 $$ x_{drift} = r_X \sin\theta$$
@@ -476,10 +477,9 @@ $$ \Delta y =  r_C (1-\sin\theta) + r_X (1-\cos\theta) $$
 
 \textit{Q.E.F}
 \subsubsection{Rotating Into The Field's Plane}
-We have now found the change in postion but it is from the robots previous frame of refrence.
-We must rotate the point from the robots frame of refrence to the fields frame of refrence. We know the heading of the robot relative to the fields so we can use it to find the new point.
-We will be refrencing the following diagram.
-
+We have now found the change in position but it is from the robots previous frame of reference.
+We must rotate the point from the robots frame of reference to the fields frame of reference. We know the heading of the robot relative to the fields so we can use it to find the new point.
+We will be referencing Figure \ref{FIG::PointRot}.
 \begin{figure}
 \caption{Point Rotation Diagram}
 \label{FIG::PointRot}
@@ -491,34 +491,105 @@ We will be refrencing the following diagram.
     %vectors
     \draw[->] (0,0) -- (4,1);
     \draw[->] (0,0) -- (2.828,3);
-    \draw (2,0) arc (0:26.5:1);
-    \draw (1,0.3) arc (5:45:0.8);
+    \draw[color=red] (2,0) arc (0:40:2.4);
+    \draw[color=blue] (1,0.3) arc (5:45:0.8);
     %labels
-    \node at (2.3, 0.2){$v$};
-    \node at (1.1, 0.7){$\theta$};
-    \node at (4.6,1){$(x,y)$};
-    \node at (3.6,3){$(x',y')$};
-
-
+    \node[color=red,thick] at (2.1, 0.7){$\theta$};
+    \node[color=blue] at (1.2, 0.7){$-v$};
+    \node at (4.6,1){$(x',y')$};
+    \node at (3.6,3){$(x,y)$};
 \end{tikzpicture}
 \end{figure}
 
-\paragraph{To find the $x_1$}
+Figure \ref{FIG::PointRot} depicts a clockwise rotation. It is important to note that the rotation from the
+robots frame of reference to the fields frame is a rotation counter-clockwise, this means that we
+rotate the point clockwise. The way to think of the logic here is imagine rotating an object
+counter-clockwise. Reset the object then imagine orbiting your head around the object clockwise.
+The object looks the same after both rotations. With this knowledge, the following is a
+derivation of formulas for $x'$ and $y'$.
+
+\centering
+\hrule
+\textit{Given $x$,$y$,$\theta$, and $v$; find $x'$ and $y'$}
+
+\begin{figure}[h]
+    \begin{subfigure}{0.5\textwidth}
+        \centering
+        $x=r\cos\theta$
+
+        $x'=r\sin(\theta+(-v))$
+
+        $x'=r\sin(\theta-v)$
+
+        $x'=r\cos\theta\cos v + r\sin\theta\sin v$
+
+        $x'=x\cos v + y\sin v$
+
+        $y=r\sin\theta$
+
+        $y'=r\sin(\theta+(-v))$
+
+        $y'=r\sin(\theta-v)$
+
+        $y'=r\sin\theta\cos v - r\cos\theta\sin v$
+
+        $y'=y\cos v - x\sin v$
+    \end{subfigure}%
+    \rulesep
+    \begin{subfigure}{0.5\textwidth}
+        \centering
+        Convert to Polar
+
+        Polar Rotation
+
+        Simplify
+
+        Cosine Angle Subtraction Identity
+
+        Substitute
+
+        Convert to Polar
+
+        Polar Rotation
+
+        Simplify
+
+        Sine Angle Subtraction Identity
+
+        Substitute
+
+    \end{subfigure}
+\end{figure}
+
+\raggedright
+Thus we have found that $x' = x\cos v + y\sin v$ and $y'=y\cos v - x\sin v$.
+
+\textit{Q.E.F}
+
+By applying this function to the inertial sensors previous position and our values for $\Delta x$ and $\Delta y$ we get our absolute change in field position; represented by $\Delta x_{abs}$ and $\Delta y_{abs}$. It must be noted that we must multiply the value of the inertial sensor by -1 to make the value negative, this is so because the inertial sensor measures clockwise but we want counter-clockwise rotation.
+
+\subsubsection{Final Steps}
+Finally, we must add our absolute change values to the robots absolute position; represented by $x_{avg0}$ and $y_{avg0}$. So the following formulas are true.
+
+$$x_{avg1} = x_{avg0} + \Delta x_{avg}$$
+$$y_{avg1} = y_{avg0} + \Delta y_{avg}$$
+
+This concludes this section. In the coming sections we will put this knowledge into practice to control the robot.
 
 \section{The pointToPoint function}
 
 \section{Debugging}
 
 \subsection{Brain Crashes 2024-8-19}
-We ran into a runtime error during inital testing of our program. As soon as the program began it would crash. It gave us limited information, including a state printout. A state printout is where the program simply reports the current memory adresses on the CPU and runtime stack. See Figure \ref{FIG::statePrint} for an example.
+We ran into a runtime error during initial testing of our program. As soon as the program began it would crash. It gave us limited information, including a state printout. A state printout is where the program simply reports the current memory addresses on the CPU and runtime stack. See Figure \ref{FIG::statePrint} for an example.
 
-By using a tool bundled with our cross complier we were able to locate possible error zones (Figure \ref{FIG::statePrint})
+By using a tool bundled with our cross compiler we were able to locate possible error zones (Figure \ref{FIG::statePrint})
 Both of these error zones were within library files, which we do not have easy access to.
-The best course of action was decided to be to reintall Lemlib. This made no diffrence.
-Still thinking that this was a problem with the library, we tried installing an old version of Lemlib. This also made no difference.
-After talking with another team and collaborating on the debugging process, we found that the problem was with the order of intalization in the Robot class. It seems to of stemed from a misunderstanding in the use of intalizer lists.
-We thought that the intializer list would begin at the top and step down, howevet it seems that
-the intalizer list looks at the order of declarations in the class declaration and does it in that order. Due to the fact that we had declared chassis before it's component pieces, the program crashed. We fixed this by moving the chassis declaration to the bottom of the declration stack.
+The best course of action was decided to be to reinstall LemLib. This made no difference.
+Still thinking that this was a problem with the library, we tried installing an old version of LemLib. This also made no difference.
+After talking with another team and collaborating on the debugging process, we found that the problem was with the order of initialization in the Robot class. It seems to of stemmed from a misunderstanding in the use of tantalizer lists.
+We thought that the initializer list would begin at the top and step down, however it seems that
+the initializer list looks at the order of declarations in the class declaration and does it in that order. Due to the fact that we had declared chassis before it's component pieces, the program crashed. We fixed this by moving the chassis declaration to the bottom of the declaration stack.
 Correct and incorrect code can be found in Figure \ref{CODE::initOrderSimp}.
 \begin{figure}
  \centering
@@ -531,7 +602,7 @@ Correct and incorrect code can be found in Figure \ref{CODE::initOrderSimp}.
 \begin{figure}
 \begin{subfigure}{0.5\textwidth}
 
-\textit{Incorrect Intalization Order}
+\textit{Incorrect Initialization Order}
 \begin{verbatim}
      class Robot
      {
@@ -543,7 +614,7 @@ Correct and incorrect code can be found in Figure \ref{CODE::initOrderSimp}.
 \end{verbatim}
 \end{subfigure}%
 \begin{subfigure}{0.5\textwidth}
-\textit{Correct Intalization Order}
+\textit{Correct Initialization Order}
 \begin{verbatim}
      class Robot
      {
@@ -567,7 +638,7 @@ Correct and incorrect code can be found in Figure \ref{CODE::initOrderSimp}.
 \appendix
 \section*{Appendix}
 \addcontentsline{toc}{section}{Appendix}
-The appendix will detail background information and helper functions which are not specfic to robotics.
+The appendix will detail background information and helper functions which are not specific to robotics.
 \section{Derivations for Helper Functions}
 \subsection{Deriving the degToIn Function} \label{app_degToIn}
     The degToIn function uses basic circle geometry to convert the degrees a wheel rotates into the distance the wheel moves in inches using the wheel diameter. This function hinges on the principle that a wheel moves a distance equivalent to it's circumference for each full rotation. We define circumference with the equation.
