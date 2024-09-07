@@ -18,7 +18,7 @@
  \tableofcontents
  \newpage
 
-\section*{Programming Environment}
+\section*{Programming Environments}
 \addcontentsline{toc}{section}{Programming Environment}
 This section details the way in which we are managing our code for this robotics year.
 \section{Version Control: Git}
@@ -85,7 +85,7 @@ This section of the notebook will detail the Algorithms that we are using for ro
     For a PID to properly reach the target it must be tuned. Inadequate tuning can lead to failure to reach the target or aggressive oscillations. We tune a PID by changing tuning parameters, these parameters are called $K_P$ $K_I$ and $K_D$. The first step is to set all tuning parameters to 0. By setting a parameter to zero we can cut out their influence for the time being. As in the previous section we will look at the tuning of each term individually.
 
 \paragraph{Tuning the $K_P$ Term}
-    The first step to tuning a PID is to set the $K_P$ term. The first step to setting $K_P$ is to increases it until we get an overshoot and a settle either on the target or settles into an undershoot. If it settles on the target we are done with tuning and PID should be ready to use. If we settle into an undershoot we must move onto setting the $K_I$ term. If we overshoot or enter oscillations without settling we need to decrees the $K_P$ term.
+    The first step to tuning a PID is to set the $K_P$ term. The first step to setting $K_P$ is to increase it until we get an overshoot and a settle either on the target or settles into an under-shoot. If it settles on the target we are done with tuning and PID should be ready to use. If we settle into an under-shoot we must move onto setting the $K_I$ term. If we overshoot or enter oscillations without settling we need to decrees the $K_P$ term.
 
 \paragraph{Tuning the $K_I$ Term}
     The purpose of changing the $K_I$ term is to fix steady state error after the control settles. As a result of the behavior of the $I$ term to increases over time, it can add input to make the final push to the target even after the distance is not great enough for the $P$ term to have an effect. The $K_I$ does not need to be changed in all application. The $K_I$ term should be increased with caution because increasing it even by small amounts can introduce instability and overshoot.
@@ -98,7 +98,7 @@ This section of the notebook will detail the Algorithms that we are using for ro
     When using a PID for an actual application we can use the information described above to create a foundation, but we also need to add some extra parts to help with the imperfections of the real world. The change that must be made is to tell the program when it is ``Close Enough'' and it can stop. There is also the problem of feeding the input to the application. First we will look at the parts which are similar to the PID theory above.
 
 \subsection{Initializing Variables and Setting Up}
-    The first step to creating any new code system is to create an object (See the ``Overview of Object Oriented Programming'' to get information on this concept), and create variables we need. For now we will only create variables related to the theory and not the modifications required for a code implementation. This is all done in the header file (Also see the ``Overview of Programming Concepts'' for more information). So far, our code looks like the following.
+    The first step to creating any new code system is to create an object (See the ``Overview of Object-Oriented Programming'' to get information on this concept), and create variables we need. For now we will only create variables related to the theory and not the modifications required for a code implementation. This is all done in the header file (Also see the ``Overview of Programming Concepts'' for more information). So far, our code looks like the following.
 
     \begin{verbatim}
         in pid.hpp:
