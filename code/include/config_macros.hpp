@@ -4,6 +4,8 @@
 #include "api.h"
 #include "lemlib/api.hpp"
 #include "../helpers/helpers.hpp"
+#include "pros/misc.h"
+
 namespace highstakes 
 {
 namespace config 
@@ -34,10 +36,13 @@ const int DRIVE_GEAR = pros::E_MOTOR_GEAR_BLUE;
 const double DRIVE_HORIZONTAL_DRIFT = 2;
 const double DRIVE_RPM = 600;
 
-//odom dimensions
+// odom dimensions
 const double TRACKING_WHEEL_DIAM = lemlib::Omniwheel::OLD_275;
 const double ODOM_VER_OFFSET = -2.5; //(in)
 const double ODOM_HOR_OFFSET = 0; //(in)
+
+// drivecontrol buttons
+const int CLAMP_BUTTON = pros::E_CONTROLLER_DIGITAL_R2;
 
 } // namsespace config
 } // namespace highstakes

@@ -89,12 +89,12 @@ void opcontrol()
                                 master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y)
                                );
                 // we need a latch because it pulses otherwise
-                if(master.get_digital(pros::E_CONTROLLER_DIGITAL_R2) && !clamp_latch)
+                if(master.get_digital(highstakes::CLAMP_BUTTON) && !clamp_latch)
                 {
                         robot.clampToggle();
                         clamp_latch = true;
                 }
-                else if(!master.get_digital(pros::E_CONTROLLER_DIGITAL_R2))
+                else if(!master.get_digital(highstakes::config::CLAMP_BUTTON))
                 {
                         clamp_latch = false;
                 }
