@@ -4,6 +4,7 @@
 #include "lemlib/api.hpp"
 #include "config_macros.hpp"
 #include "pros/adi.hpp"
+#include "pros/motors.hpp"
 
 namespace highstakes {
 class Robot {
@@ -22,7 +23,9 @@ class Robot {
                 lemlib::ControllerSettings lateralpid;
                 lemlib::ControllerSettings angularpid;
 
+                pros::Motor intake;
                 pros::adi::DigitalOut clamp;
+
 
                 bool clampState = LOW;
         public:
@@ -31,6 +34,9 @@ class Robot {
                 Robot();
                 void TankInput(double leftY, double rightY);
                 void clampToggle();
+                void intakeRun();
+                void intakeExtake();
+                void intakeBrake();
 
 
 };

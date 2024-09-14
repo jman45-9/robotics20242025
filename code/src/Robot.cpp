@@ -74,7 +74,10 @@ chassis(
                 this->lateralpid,
                 this->angularpid,
                 this->odom_sensors
-       )
+       ),
+intake(
+                highstakes::config::INTAKE
+      )
 {
 }
 
@@ -88,3 +91,20 @@ void highstakes::Robot::clampToggle()
         this->clampState = !this->clampState;
         this->clamp.set_value(this->clampState);
 }
+
+void highstakes::Robot::intakeRun()
+{
+        this->intake.move_voltage(12*1000);
+}
+
+void highstakes::Robot::intakeExtake()
+{
+        this->intake.move_voltage(-12*1000);
+}
+
+void highstakes::Robot::intakeBrake()
+{
+        this->intake.brake();
+}
+
+

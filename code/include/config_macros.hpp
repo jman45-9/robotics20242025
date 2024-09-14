@@ -24,6 +24,8 @@ const int IMU = 15;
 const int ODOM_ROT_VER = 20;
 const int ODOM_ROT_HOR = 11;
 
+const int INTAKE = 2;
+
 // threewire port constants
 // const char <name> = <port_letter>
 const char ADI_CLAMP_PORT = 'a';
@@ -42,7 +44,10 @@ const double ODOM_VER_OFFSET = -2.5; //(in)
 const double ODOM_HOR_OFFSET = 0; //(in)
 
 // drivecontrol buttons
-const int CLAMP_BUTTON = pros::E_CONTROLLER_DIGITAL_R2;
+const auto CLAMP_BUTTON = pros::E_CONTROLLER_DIGITAL_R2;
+const auto INTAKE_BUTTON = pros::E_CONTROLLER_DIGITAL_L1;
+const auto EXTAKE_BUTTON = pros::E_CONTROLLER_DIGITAL_L2;
+
 
 } // namsespace config
 } // namespace highstakes
