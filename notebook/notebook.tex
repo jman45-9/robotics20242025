@@ -1,4 +1,4 @@
-\documentclass[12pt]{article}
+\documentclass[12pt]{report}
 
 \usepackage{tikz}
 \usepackage{graphicx}
@@ -18,7 +18,7 @@
  \tableofcontents
  \newpage
 
-\section*{Programming Environments}
+\chapter{Programming Environments}
 \addcontentsline{toc}{section}{Programming Environment}
 This section details the way in which we are managing our code for this robotics year.
 \section{Version Control: Git}
@@ -61,8 +61,7 @@ In accordance with the REC Code of Conduct,
     we have made sure that we understand the algorithm behind LemLib. 
 The notebook details each of these algorithms.
 
-\section*{Algorithms for Programming}
-\addcontentsline{toc}{section}{Algorithms for Programming}
+\chapter{The PID Controller}
 This section of the notebook will detail the Algorithms that we are using for robot control.
 \section{PID Controller Basics}
     A PID Controller (Proportional–Integral–Derivative Controller) is a control system that brings the system softly to a target,
@@ -392,6 +391,8 @@ This section of the notebook will detail the Algorithms that we are using for ro
 
 
 \pagebreak
+\chapter{Odometry Theory}
+
 \section{Basics of Odometry}
 \subsection{What is Odometry}
     Odometry allows the robot to keep track of where it is on the field.
@@ -736,11 +737,12 @@ $$y_{avg1} = y_{avg0} + \Delta y_{avg}$$
 This concludes this section.
 In the coming sections we will put this knowledge into practice to control the robot.
 
+\chapter{Moving the Robot with Odometry}
 \section{The pointToPoint function}
 
-\section{Debugging}
+\chapter{Adventures in Debugging}
 
-\subsection{Brain Crashes 2024-8-19}
+\section{Brain Crashes 2024-8-19}
 We ran into a runtime error during initial testing of our program.
 As soon as the program began it would crash.
 It gave us limited information, including a state printout.
@@ -804,11 +806,9 @@ Correct and incorrect code can be found in Figure \ref{CODE::initOrderSimp}.
 % BEGIN APPENDIX
 \newpage
 \appendix
-\section*{Appendix}
-\addcontentsline{toc}{section}{Appendix}
 The appendix will detail background information and helper functions which are not specific to robotics.
-\section{Derivations for Helper Functions}
-\subsection{Deriving the degToIn Function} \label{app_degToIn}
+\chapter{Derivations for Helper Functions}
+\section{Deriving the degToIn Function} \label{app_degToIn}
     The degToIn function uses basic circle geometry to convert the degrees a wheel rotates into the distance the wheel moves in inches using the wheel diameter.
     This function hinges on the principle that a wheel moves a distance equivalent to its circumference for each full rotation. 
     We define circumference with the equation:
