@@ -5,6 +5,7 @@ namespace helpers
 namespace math 
 {
         inline double uTauTo_uDeg(double uTau);
+        inline int sign(double x);
 } //namespace math
 } // namespace helpers
 

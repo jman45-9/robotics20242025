@@ -81,9 +81,16 @@ intake(
 {
 }
 
+double inputCurve(double x) 
+{
+       return ((x * x) / 127) * helpers::math::sign(x);
+}
+
 void highstakes::Robot::TankInput(double leftY, double rightY) 
 {
-        this->chassis.tank(leftY, rightY);
+        double left = inputCurve(leftY);
+        double right = inputCurve(rightY);
+        this->chassis.tank(left, right, true); // disables lemlib curve
 }
 
 void highstakes::Robot::clampToggle()

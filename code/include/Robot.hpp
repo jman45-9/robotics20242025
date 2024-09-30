@@ -5,6 +5,7 @@
 #include "config_macros.hpp"
 #include "pros/adi.hpp"
 #include "pros/motors.hpp"
+#include "../helpers/helpers.hpp"
 
 namespace highstakes {
 class Robot {
