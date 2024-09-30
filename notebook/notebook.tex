@@ -61,6 +61,39 @@ In accordance with the REC Code of Conduct,
     we have made sure that we understand the algorithm behind LemLib. 
 The notebook details each of these algorithms.
 
+\chapter{Driver Control}
+\section{Drivetrain}
+On our drivetrain we have decided to use tank drive.
+With tank drive, each joystick controls one side of the drivetrain.
+We choose this control schema because it is familiar to our driver.
+To implement tank drive,
+    we get the joysticks position and feed it to the motors.
+We use LemLib for controlling the motors,
+    which is included here with an explanation.
+\begin{verbatim}
+    void Chassis::tank(int left, int right, 
+        bool disableDriveCurve) {
+    if (disableDriveCurve) {
+        drivetrain.leftMotors->move(left);
+        drivetrain.rightMotors->move(right);
+    }
+    }
+\end{verbatim}
+
+This excerpt from LemLib shows the important parts to our code.
+We choose to disable LemLib's scaling curve, so we can implement our own
+    (Discussed in the subsection).
+After the if statement we see that the inputs to left and right
+    sides of the drivetrain are passed in and fed to motors.
+To get the values to pass we use the following lines:
+\begin{verbatim}
+    master.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y)
+    master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y)
+\end{verbatim}
+This gives us the y position of the joysticks which we can then
+    feed to the motors.
+
+\subsection{Input Scaling}
 \chapter{The PID Controller}
 This section of the notebook will detail the Algorithms that we are using for robot control.
 \section{PID Controller Basics}
