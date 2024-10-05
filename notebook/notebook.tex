@@ -144,6 +144,70 @@ To avoid an error, the sign function is equal to 0 at 0.
 The first term, \verb|(x*x)/127|, is equivalent to $\frac{x^2}{127}$.
 Together these form the piecewise function above.
 
+\section{Controlling Pneumatics}
+The pneumatic solenoid is controlled by the 3 wire ports on the robot.
+This means that the brain does not know what device is on the other end,
+    and we must tell it which signal to send.
+Solenoids are digital out devices meaning they accept an on or off value from the brain.
+We use the following function to control solenoids: 
+    \verb|<solenoid>.set_value(<state-boolean>);|.
+When we want to control the solenoid we define a boolean value to
+    hold the current state (on or off) of the solenoid.
+The most common way to utilize pneumatics in driver control
+    is by toggling them, 
+    which is how we control the mobile goal clamp.
+
+\subsection{Toggling Pneumatics}
+To create a toggle we change the state of the boolean and send an update to the solenoid.
+The code for the mobile goal clamp toggle is as follows:
+\begin{verbatim}
+void highstakes::Robot::clampToggle()
+{
+    this->clampState = !this->clampState;
+    this->clamp.set_value(this->clampState);
+}
+\end{verbatim}
+
+The first line changes the state of the boolean. 
+The exclamation mark is a boolean NOT, meaning that we want the opposite truth value.
+This second line sends an update to the solenoid with the new state.
+
+This will work as intended if triggered once,
+    however when a button is pressed it often sends multiple inputs.
+The multiple inputs by the button trigger the solenoid multiple times,
+    and often results in a failed toggle.
+We can remedy this issues by detecting when the button is pressed,
+    and not checking for more inputs until the button is released.
+
+We first create a boolean to keep track if the button is pressed.
+If the button is pressed and the boolean is false,
+    we set the toggle and set the boolean to true.
+Due to the fact that the boolean is now true, 
+    the previous condition will not trigger, 
+    and the toggle will not trigger again.
+
+\begin{verbatim}
+    if(master.get_digital(highstakes::config::CLAMP_BUTTON) 
+        && !clamp_latch)
+    {
+        robot.clampToggle();
+        clamp_latch = true;
+    }
+    // Where clamp_latch is the boolean
+\end{verbatim}
+
+When the button is released the boolean is set to false, and the toggle can be triggered again.
+\begin{verbatim}
+    else if(!master.get_digital(
+            highstakes::config::CLAMP_BUTTON
+            ))
+    {
+        clamp_latch = false;
+    } 
+\end{verbatim}
+
+Together this code ensures that the toggle works consistently on every button press.
+
 \chapter{The PID Controller}
 This section of the notebook will detail the Algorithms that we are using for robot control.
 \section{PID Controller Basics}
