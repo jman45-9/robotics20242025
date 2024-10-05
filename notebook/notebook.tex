@@ -157,7 +157,7 @@ The most common way to utilize pneumatics in driver control
     is by toggling them, 
     which is how we control the mobile goal clamp.
 
-\subsection{Toggling Pneumatics}
+\subsection{Toggling Pneumatics}\label{SUBSEC::toggle}
 To create a toggle we change the state of the boolean and send an update to the solenoid.
 The code for the mobile goal clamp toggle is as follows:
 \begin{verbatim}
@@ -207,6 +207,14 @@ When the button is released the boolean is set to false, and the toggle can be t
 \end{verbatim}
 
 Together this code ensures that the toggle works consistently on every button press.
+
+\section{Controlling the Intake}
+The intake allows us to pick up rings and move them to the conveyor,
+    which is controlled by the same motor.
+We need to be able to run the intake in both directions(intake and extake).
+When the set buttons are held (drivers preference) the code will set the motor voltage
+    to either positive 12 volts or negative 12 volts, respective to intake or extake.
+When the button is released, the motor in stopped.
 
 \chapter{The PID Controller}
 This section of the notebook will detail the Algorithms that we are using for robot control.
