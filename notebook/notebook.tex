@@ -4,6 +4,7 @@
 \usepackage{graphicx}
 \usepackage{caption}
 \usepackage{subcaption}
+\usepackage{amsmath}
 
 \newcommand{\rulesep}{\unskip\ \vrule\ }
 
@@ -94,6 +95,55 @@ This gives us the y position of the joysticks which we can then
     feed to the motors.
 
 \subsection{Input Scaling}
+Under normal operation the power to the motors will follow a
+    linear curve.
+The linear curve allows us to reach full power,
+    but it can be difficult to control for fine movements.
+We can not simply reduce input sensitivity because that would
+    decrease the top speed.
+Instead, we need to make a scaling curve that has low
+    sensitivity at low values but still reaches the top speed.
+
+We chose the curve shown and defined in Figure \ref{FIG::scalCurve}.
+We can see that the function is flatter at lower values and steeper at higher values.
+\begin{figure}[h]
+
+    \centering
+    \begin{subfigure}[][][c]{0.7\textwidth}
+        \centering
+        \includegraphics[scale=0.25]{figures/scalingCurve.png}
+        \caption{Curve}
+    \end{subfigure}%
+    \begin{subfigure}[][][c]{0.3\textwidth}
+        \centering
+        $$
+        f(x) = 
+            \begin{cases}
+                \frac{x^2}{127} & x>0 \\
+                0 & x=0 \\
+                -\frac{x^2}{127} & x<0
+            \end{cases}
+        $$        
+        \caption{Definition of Curve}
+    \end{subfigure}
+
+    \label{FIG::scalCurve}
+    \caption{Scaling Curve and Definition}
+
+\end{figure}
+
+The code for this function is as follows.
+\begin{verbatim}
+double inputCurve(double x) 
+{
+    return ((x * x) / 127) * helpers::math::sign(x);
+}
+\end{verbatim}
+The sign function returns 1 if greater than 0, and -1 if less than 0.
+To avoid an error, the sign function is equal to 0 at 0.
+The first term, \verb|(x*x)/127|, is equivalent to $\frac{x^2}{127}$.
+Together these form the piecewise function above.
+
 \chapter{The PID Controller}
 This section of the notebook will detail the Algorithms that we are using for robot control.
 \section{PID Controller Basics}
