@@ -62,6 +62,46 @@ In accordance with the REC Code of Conduct,
     we have made sure that we understand the algorithm behind LemLib. 
 The notebook details each of these algorithms.
 
+\chapter{Code Structure}
+
+This chapter covers the internal structure of the code and how they work together.
+
+\section{Namespaces}
+Namespaces are a way to separate code and prevents naming conflicts. 
+The significant namespaces for this code are seen in the table, along with their purpose.
+
+\begin{figure}[h]
+        \caption{Table of Namespaces}
+        \centering
+        \begin{tabular}{c|c}
+        Namespace & Function \\
+        \hline
+        highstakes & Primary components for this year \\
+        helpers & Secondary components used year to year \\
+        pros & PROS Library \\
+        lemlib & LemLib Library
+    \end{tabular}
+\end{figure}
+
+Namespaces can be recognized by their syntax.
+All namespaces follow a specific syntax, shown in Figure \ref{CODE::namespacesyntax}.
+Namespaces can be declared within another namespace to create sub-namespaces.
+However, these are optional.
+\begin{figure}[h]
+    \caption{Namespace syntax}
+    \label{CODE::namespacesyntax}
+
+    \begin{verbatim}
+        <namespace>::<sub-namespace>::<identifier>
+    \end{verbatim}
+\end{figure}
+
+\section{The Robot}
+\section{Driver Control Structure}
+\section{Autonomous Structure}
+\section{Helper Functions}
+
+
 \chapter{Driver Control}
 \section{Drivetrain}
 On our drivetrain we have decided to use tank drive.
@@ -127,8 +167,8 @@ We can see that the function is flatter at lower values and steeper at higher va
         \caption{Definition of Curve}
     \end{subfigure}
 
-    \label{FIG::scalCurve}
     \caption{Scaling Curve and Definition}
+    \label{FIG::scalCurve}
 
 \end{figure}
 
