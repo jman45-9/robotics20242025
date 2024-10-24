@@ -1,5 +1,4 @@
-#include "helpers.hpp"
-#include "helper_fuctions.hpp"
+#include "../include/helpers.hpp"
 
 inline double helpers::math::uTauTo_uDeg(double uTau)
 {

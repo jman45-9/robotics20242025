@@ -3,7 +3,7 @@
 
 #include "api.h"
 #include "lemlib/api.hpp"
-#include "../helpers/helpers.hpp"
+#include "helpers.hpp"
 #include "pros/misc.h"
 
 namespace highstakes 
@@ -25,6 +25,7 @@ const int ODOM_ROT_VER = 20;
 const int ODOM_ROT_HOR = 11;
 
 const int INTAKE = 2;
+const int TRACK = 3;
 
 // threewire port constants
 // const char <name> = <port_letter>
@@ -47,6 +48,8 @@ const double ODOM_HOR_OFFSET = 0; //(in)
 const auto CLAMP_BUTTON = pros::E_CONTROLLER_DIGITAL_R2;
 const auto INTAKE_BUTTON = pros::E_CONTROLLER_DIGITAL_L1;
 const auto EXTAKE_BUTTON = pros::E_CONTROLLER_DIGITAL_L2;
+
+const auto CONVEYOR_BUTTON = pros::E_CONTROLLER_DIGITAL_R2;
 
 
 } // namsespace config

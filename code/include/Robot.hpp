@@ -5,7 +5,7 @@
 #include "config_macros.hpp"
 #include "pros/adi.hpp"
 #include "pros/motors.hpp"
-#include "../helpers/helpers.hpp"
+#include "helpers.hpp"
 
 namespace highstakes {
 class Robot {
@@ -28,6 +28,7 @@ class Robot {
                 pros::adi::DigitalOut clamp;
 
 
+
                 bool clampState = LOW;
         public:
                 lemlib::Chassis chassis;
@@ -38,6 +39,8 @@ class Robot {
                 void intakeRun();
                 void intakeExtake();
                 void intakeBrake();
+                        
+                pros::Motor track;
 
 
 };

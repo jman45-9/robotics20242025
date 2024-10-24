@@ -77,13 +77,17 @@ chassis(
        ),
 intake(
                 highstakes::config::INTAKE
-      )
+      ),
+track(
+                highstakes::config::TRACK
+     )
 {
 }
 
 double inputCurve(double x) 
 {
-       return ((x * x) / 127) * helpers::math::sign(x);
+        return x;
+       //return ((x * x) / 127) * helpers::math::sign(x);
 }
 
 void highstakes::Robot::TankInput(double leftY, double rightY) 

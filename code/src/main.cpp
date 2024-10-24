@@ -105,6 +105,12 @@ void opcontrol()
                         robot.intakeExtake();
                 else
                         robot.intakeBrake();
+
+                if(master.get_digital(highstakes::config::CONVEYOR_BUTTON))
+                        robot.track.move_voltage(12*1000);
+                else
+                        robot.track.brake();
+                        
                                 
         }
 
