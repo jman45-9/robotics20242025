@@ -30,15 +30,20 @@ class Robot {
 
 
                 bool clampState = LOW;
+                bool intakeState = false;
         public:
                 lemlib::Chassis chassis;
 
                 Robot();
+
+                bool getIntakeState();
+
                 void TankInput(double leftY, double rightY);
                 void clampToggle();
                 void intakeRun();
                 void intakeExtake();
                 void intakeBrake();
+                void toggleIntake();
                         
                 pros::Motor track;
 

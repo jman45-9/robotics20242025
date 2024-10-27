@@ -84,6 +84,11 @@ track(
 {
 }
 
+bool highstakes::Robot::getIntakeState()
+{
+        return this->intakeState;
+}
+
 double inputCurve(double x) 
 {
         return x;
@@ -118,4 +123,11 @@ void highstakes::Robot::intakeBrake()
         this->intake.brake();
 }
 
-
+void highstakes::Robot::toggleIntake()
+{
+        intakeState = !intakeState;
+        if (intakeState)
+                this->intakeRun();
+        else
+                this->intakeBrake();
+}

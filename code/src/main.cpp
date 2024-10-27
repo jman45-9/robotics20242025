@@ -82,6 +82,7 @@ pros::Controller master(pros::E_CONTROLLER_MASTER);
 bool clamp_latch = false;
 void opcontrol() 
 {
+        bool intakeLatch = false;
         //main control loop
         while(true) {
                 robot.TankInput(
@@ -99,12 +100,20 @@ void opcontrol()
                         clamp_latch = false;
                 }
 
-                if(master.get_digital(highstakes::config::INTAKE_BUTTON))
-                                robot.intakeRun();
-                else if (master.get_digital(highstakes::config::EXTAKE_BUTTON))
+
+                if(master.get_digital(highstakes::config::INTAKE_BUTTON) && !intakeLatch)
+                {
+                        robot.intakeToggle();
+                        intakeLatch = true;
+                }
+                else if(master.get_digital(highstakes::config::EXTAKE_BUTTON))
+                {
                         robot.intakeExtake();
-                else
-                        robot.intakeBrake();
+                }
+                else if(!master.get_digital(highstakes::config::INTAKE_BUTTON))
+                {
+                        intakeLatch = false;
+                }
 
                 if(master.get_digital(highstakes::config::CONVEYOR_BUTTON))
                         robot.track.move_voltage(12*1000);
