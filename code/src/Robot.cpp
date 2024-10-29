@@ -80,7 +80,13 @@ intake(
       ),
 track(
                 highstakes::config::TRACK
-     )
+     ),
+clamp_lmit_1(
+                highstakes::config::ADI_CLAMP_LMIT_1
+            ),
+clamp_lmit_2(
+                highstakes::config::ADI_CLAMP_LMIT_2
+            )
 {
 }
 
@@ -130,4 +136,13 @@ void highstakes::Robot::toggleIntake()
                 this->intakeRun();
         else
                 this->intakeBrake();
+}
+
+void highstakes::Robot::checkClamp()
+{
+        // check if clamped
+        if (clampState)
+                return;
+        if (this->clamp_lmit_1.get_value() && this->clamp_lmit_2.get_value())
+                this->clampToggle();
 }

@@ -27,6 +27,9 @@ class Robot {
                 pros::Motor intake;
                 pros::adi::DigitalOut clamp;
 
+                pros::adi::DigitalIn clamp_lmit_1;
+                pros::adi::DigitalIn clamp_lmit_2;
+
 
 
                 bool clampState = LOW;
@@ -44,6 +47,7 @@ class Robot {
                 void intakeExtake();
                 void intakeBrake();
                 void toggleIntake();
+                void checkClamp();
                         
                 pros::Motor track;
 

@@ -30,6 +30,8 @@ const int TRACK = 3;
 // threewire port constants
 // const char <name> = <port_letter>
 const char ADI_CLAMP_PORT = 'a';
+const char ADI_CLAMP_LMIT_1 = 'b';
+const char ADI_CLAMP_LMIT_2 = 'c';
 
 // robot drive specs
 const double DRIVE_WHEEL_DIAM = lemlib::Omniwheel::NEW_325; //(in)

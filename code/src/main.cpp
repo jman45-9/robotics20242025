@@ -103,7 +103,7 @@ void opcontrol()
 
                 if(master.get_digital(highstakes::config::INTAKE_BUTTON) && !intakeLatch)
                 {
-                        robot.intakeToggle();
+                        robot.toggleIntake();
                         intakeLatch = true;
                 }
                 else if(master.get_digital(highstakes::config::EXTAKE_BUTTON))
@@ -119,6 +119,8 @@ void opcontrol()
                         robot.track.move_voltage(12*1000);
                 else
                         robot.track.brake();
+
+                robot.checkClamp();
                         
                                 
         }
