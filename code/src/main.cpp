@@ -94,6 +94,7 @@ void opcontrol()
                 {
                         robot.clampToggle();
                         clamp_latch = true;
+                        robot.timeoutClamp();
                 }
                 else if(!master.get_digital(highstakes::config::CLAMP_BUTTON))
                 {
@@ -122,10 +123,13 @@ void opcontrol()
 
                 robot.checkClamp();
                         
-                                
+                if(robot.clampInTimeout())
+                        robot.decClampTimeout();               
+                
+
+                pros::delay(10);
         }
 
-        pros::sleep(10);
 
 }
 	

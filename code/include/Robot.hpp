@@ -34,6 +34,8 @@ class Robot {
 
                 bool clampState = LOW;
                 bool intakeState = false;
+
+                int clampTimeout = 0;
         public:
                 lemlib::Chassis chassis;
 
@@ -48,10 +50,12 @@ class Robot {
                 void intakeBrake();
                 void toggleIntake();
                 void checkClamp();
+
+                void timeoutClamp();
+                void decClampTimeout();
+                bool clampInTimeout();
                         
                 pros::Motor track;
-
-
 };
 }
 #endif // ROBOT_ROBOTICS2425_HPP

@@ -143,6 +143,23 @@ void highstakes::Robot::checkClamp()
         // check if clamped
         if (clampState)
                 return;
+        if (clampInTimeout())
+                return;
         if (this->clamp_lmit_1.get_value() && this->clamp_lmit_2.get_value())
                 this->clampToggle();
+}
+
+void highstakes::Robot::timeoutClamp()
+{
+        this->clampTimeout = highstakes::config::CLAMP_TIMEOUT_LEN;
+}
+
+void highstakes::Robot::decClampTimeout()
+{
+        this->clampTimeout--;
+}
+
+bool highstakes::Robot::clampInTimeout()
+{
+        return (this->clampTimeout > 0);
 }

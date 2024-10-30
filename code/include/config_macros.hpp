@@ -53,7 +53,10 @@ const auto EXTAKE_BUTTON = pros::E_CONTROLLER_DIGITAL_L2;
 
 const auto CONVEYOR_BUTTON = pros::E_CONTROLLER_DIGITAL_R2;
 
+//misc cofig constants
 
+// roughly 1 per 5 milliseconds
+const int CLAMP_TIMEOUT_LEN = 100;
 } // namsespace config
 } // namespace highstakes
 
