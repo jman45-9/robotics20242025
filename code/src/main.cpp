@@ -125,6 +125,7 @@ void opcontrol()
                                 
         }
 
+        pros::sleep(10);
 
 }
 	
