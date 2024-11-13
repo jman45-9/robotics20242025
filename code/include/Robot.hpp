@@ -48,6 +48,7 @@ class Robot {
                 void intakeRun();
                 void intakeExtake();
                 void intakeBrake();
+                void brake();
                 void toggleIntake();
                 void checkClamp();
 
@@ -56,6 +57,8 @@ class Robot {
                 bool clampInTimeout();
                         
                 pros::Motor track;
+
+                void mov(double direc);
 };
 }
 #endif // ROBOT_ROBOTICS2425_HPP

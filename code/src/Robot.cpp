@@ -129,6 +129,12 @@ void highstakes::Robot::intakeBrake()
         this->intake.brake();
 }
 
+void highstakes::Robot::brake()
+{
+        this->leftmtrgroup.brake();
+        this->rightmtrgroup.brake();
+}
+
 void highstakes::Robot::toggleIntake()
 {
         intakeState = !intakeState;
@@ -162,4 +168,10 @@ void highstakes::Robot::decClampTimeout()
 bool highstakes::Robot::clampInTimeout()
 {
         return (this->clampTimeout > 0);
+}
+
+void highstakes::Robot::mov(double direc)
+{
+        this->leftmtrgroup.move_voltage(12*1000*direc);
+        this->rightmtrgroup.move_voltage(12*1000*direc);
 }

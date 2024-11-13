@@ -59,10 +59,12 @@ void competition_initialize() {}
  */
 void autonomous() 
 {
-        /* BEGIN TEST CODE */
-        robot.chassis.setPose(0,0,0);
-        robot.chassis.turnToHeading(180,100000);
-        /* END TEST CODE */
+        robot.mov(-1*0.5);
+        pros::delay(1000);
+
+        robot.clampToggle();
+        robot.track.move_voltage(12*1000);
+        robot.brake();
 }
 
 /**
