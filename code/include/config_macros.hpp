@@ -47,12 +47,12 @@ const double ODOM_VER_OFFSET = -2.5; //(in)
 const double ODOM_HOR_OFFSET = 0; //(in)
 
 // drivecontrol buttons
-const auto CLAMP_BUTTON = pros::E_CONTROLLER_DIGITAL_R1;
+const auto CLAMP_BUTTON = pros::E_CONTROLLER_DIGITAL_Y;
 const auto INTAKE_BUTTON = pros::E_CONTROLLER_DIGITAL_L1;
 const auto EXTAKE_BUTTON = pros::E_CONTROLLER_DIGITAL_L2;
 
-const auto CONVEYOR_BUTTON = pros::E_CONTROLLER_DIGITAL_R2;
-const auto REV_CONNEYOR_BUTTON = pros::E_CONTROLLER_DIGITAL_UP;
+const auto CONVEYOR_BUTTON = pros::E_CONTROLLER_DIGITAL_R1;
+const auto REV_CONNEYOR_BUTTON = pros::E_CONTROLLER_DIGITAL_R2;
 //misc cofig constants
 
 // roughly 1 per 5 milliseconds
