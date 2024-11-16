@@ -63,7 +63,6 @@ void autonomous()
         pros::delay(1000);
 
         robot.clampToggle();
-        robot.track.move_voltage(12*1000);
         robot.brake();
 }
 
