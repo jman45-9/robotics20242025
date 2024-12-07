@@ -64,7 +64,13 @@ void autonomous()
 
         robot.clampToggle();
         robot.brake();
+        pros::delay(1000);
+        robot.mov(0.5);
+        pros::delay(500);
+        robot.brake();
+        robot.track.move_voltage(12*1000);
 }
+
 
 /**
  * Runs the operator control code. This function will be started in its own task
