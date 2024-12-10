@@ -59,6 +59,8 @@ void competition_initialize() {}
  */
 void autonomous() 
 {
+        robot.chassis.setPose(0,0,0);
+        robot.chassis.turnToHeading(90,1000000);
 }
 
 

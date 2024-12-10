@@ -55,14 +55,14 @@ lateralpid(
                 20 // max accleration (slew)
         ),
 angularpid(
-                2, //kp
-                10, //ki
-                0, //kd
-                3, //anti windup
-                1, // small err range in degrees
-                100, //small err range timeout in mil-sec
-                3, //large err range in inches
-                500, // large err timeout in mil-sec
+                40, //kp
+                0, //ki
+                80, //kd
+                0, //anti windup
+                0, // small err range in degrees
+                0, //small err range timeout in mil-sec
+                0, //large err range in inches
+                0, // large err timeout in mil-sec
                 0 // max accleration (slew)
         ),
 clamp (
