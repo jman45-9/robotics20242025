@@ -40,6 +40,7 @@ class Robot {
                 lemlib::Chassis chassis;
 
                 Robot();
+                void init();
 
                 bool getIntakeState();
 
@@ -59,6 +60,9 @@ class Robot {
                 pros::Motor track;
 
                 void mov(double direc);
+                void turn(double direc);
+                double getInertial();
+
 };
 }
 #endif // ROBOT_ROBOTICS2425_HPP

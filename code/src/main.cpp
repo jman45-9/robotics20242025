@@ -26,6 +26,7 @@ void on_center_button() {
 void initialize() {
 	pros::lcd::initialize();
         robot.chassis.calibrate();
+        robot.init();
 }
 
 /**
@@ -59,6 +60,7 @@ void competition_initialize() {}
  */
 void autonomous() 
 {
+        pros::delay(100);
         robot.mov(-1*0.5);
         pros::delay(1000);
 
@@ -69,10 +71,32 @@ void autonomous()
         pros::delay(500);
         robot.brake();
         robot.track.move_voltage(12*1000);
+        pros::delay(1*1000);
+        robot.track.brake();
+        pros::delay(1000);
+        robot.clampToggle();
+        /*
+        robot.turn(1);
+        double curRot = robot.getInertial();
+        double target = curRot + 80;
+        int count = 0;
+        while(count < 10000)
+        {
+                std::cout<<robot.getInertial();
+                if(robot.getInertial() >= target-1 && robot.getInertial() <= target+1)
+                {
+                        robot.brake();
+                        break;
+                }
+                count++;
+                pros::delay(10);
+        }
+        */
 }
 
 
 /**
+
  * Runs the operator control code. This function will be started in its own task
  * with the default priority and stack size whenever the robot is enabled via
  * the Field Management System or the VEX Competition Switch in the operator

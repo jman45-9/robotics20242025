@@ -90,6 +90,15 @@ clamp_lmit_2(
 {
 }
 
+void highstakes::Robot::init() {
+        this->imu.reset(true);
+}
+
+double highstakes::Robot::getInertial() 
+{
+        return -this->imu.get_rotation();
+}
+
 bool highstakes::Robot::getIntakeState()
 {
         return this->intakeState;
@@ -173,5 +182,11 @@ bool highstakes::Robot::clampInTimeout()
 void highstakes::Robot::mov(double direc)
 {
         this->leftmtrgroup.move_voltage(12*1000*direc);
+        this->rightmtrgroup.move_voltage(12*1000*direc);
+}
+
+void highstakes::Robot::turn(double direc)
+{
+        this->leftmtrgroup.move_voltage(-12*1000*direc);
         this->rightmtrgroup.move_voltage(12*1000*direc);
 }
