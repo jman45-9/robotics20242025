@@ -111,6 +111,7 @@ void autonomous()
  */
 pros::Controller master(pros::E_CONTROLLER_MASTER);
 bool clamp_latch = false;
+bool doinkLatch = false;
 void opcontrol() 
 {
         bool intakeLatch = false;
@@ -121,6 +122,8 @@ void opcontrol()
                                 master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y)
                                );
                 // we need a latch because it pulses otherwise
+
+                // clamp
                 if(master.get_digital(highstakes::config::CLAMP_BUTTON) && !clamp_latch)
                 {
                         robot.clampToggle();
@@ -132,7 +135,18 @@ void opcontrol()
                         clamp_latch = false;
                 }
 
+                //doink
+                if(master.get_digital(highstakes::config::DOINK_BUTTON) && !doinkLatch)
+                {
+                        robot.doinkToggle();
+                        doinkLatch = true;
+                }
+                else if(!master.get_digital(highstakes::config::DOINK_BUTTON))
+                {
+                        doinkLatch = false;
+                }
 
+                //intake
                 if(master.get_digital(highstakes::config::INTAKE_BUTTON) && !intakeLatch)
                 {
                         robot.toggleIntake();
@@ -147,19 +161,20 @@ void opcontrol()
                         intakeLatch = false;
                 }
 
+                // conveyor
                 if(master.get_digital(highstakes::config::CONVEYOR_BUTTON))
                         robot.track.move_voltage(12*1000);
                 else if(master.get_digital(highstakes::config::REV_CONNEYOR_BUTTON))
                         robot.track.move_voltage(-12*1000);
                 else
                         robot.track.brake();
-
+                //autoclamp
                 robot.checkClamp();
-                        
                 if(robot.clampInTimeout())
                         robot.decClampTimeout();               
                 
 
+                // DO NOT REMOVE
                 pros::delay(10);
         }
 

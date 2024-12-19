@@ -30,7 +30,8 @@ const int TRACK = -3;
 // threewire port constants
 // const char <name> = <port_letter>
 const char ADI_CLAMP_PORT = 'a';
-const char ADI_CLAMP_LMIT_1 = 'b';
+const char ADI_DOINKER_PORT = 'b';
+const char ADI_CLAMP_LMIT_1 = 'd';
 const char ADI_CLAMP_LMIT_2 = 'c';
 
 // robot drive specs
@@ -48,6 +49,7 @@ const double ODOM_HOR_OFFSET = 0; //(in)
 
 // drivecontrol buttons
 const auto CLAMP_BUTTON = pros::E_CONTROLLER_DIGITAL_Y;
+const auto DOINK_BUTTON = pros::E_CONTROLLER_DIGITAL_A;
 const auto INTAKE_BUTTON = pros::E_CONTROLLER_DIGITAL_L1;
 const auto EXTAKE_BUTTON = pros::E_CONTROLLER_DIGITAL_L2;
 

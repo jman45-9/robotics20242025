@@ -26,6 +26,7 @@ class Robot {
 
                 pros::Motor intake;
                 pros::adi::DigitalOut clamp;
+                pros::adi::DigitalOut doinker;
 
                 pros::adi::DigitalIn clamp_lmit_1;
                 pros::adi::DigitalIn clamp_lmit_2;
@@ -33,6 +34,7 @@ class Robot {
 
 
                 bool clampState = LOW;
+                bool doinking = LOW;
                 bool intakeState = false;
 
                 int clampTimeout = 0;
@@ -46,6 +48,7 @@ class Robot {
 
                 void TankInput(double leftY, double rightY);
                 void clampToggle();
+                void doinkToggle();
                 void intakeRun();
                 void intakeExtake();
                 void intakeBrake();

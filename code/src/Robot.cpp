@@ -69,6 +69,10 @@ clamp (
                 highstakes::config::ADI_CLAMP_PORT,
                 LOW
       ),
+doinker (
+                highstakes::config::ADI_DOINKER_PORT,
+                LOW
+        ),
 chassis(
                 this->drivetrain,
                 this->lateralpid,
@@ -121,6 +125,12 @@ void highstakes::Robot::clampToggle()
 {
         this->clampState = !this->clampState;
         this->clamp.set_value(this->clampState);
+}
+
+void highstakes::Robot::doinkToggle()
+{
+        this->doinking = !this->doinking;
+        this->clamp.set_value(this->doinking);
 }
 
 void highstakes::Robot::intakeRun()
