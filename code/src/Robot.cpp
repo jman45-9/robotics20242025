@@ -130,7 +130,7 @@ void highstakes::Robot::clampToggle()
 void highstakes::Robot::doinkToggle()
 {
         this->doinking = !this->doinking;
-        this->clamp.set_value(this->doinking);
+        this->doinker.set_value(this->doinking);
 }
 
 void highstakes::Robot::intakeRun()
