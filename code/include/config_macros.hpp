@@ -21,7 +21,7 @@ const int DRIVE_MID_RIGHT = 5;
 const int DRIVE_BACK_RIGHT = -4;
 
 const int IMU = 9;
-const int ODOM_ROT_VER = 20;
+const int ODOM_ROT_VER = 9;
 const int ODOM_ROT_HOR = 11;
 
 const int INTAKE = -2;
